@@ -13,6 +13,7 @@
 from ctypes import pointer
 from typing import Optional
 import sim
+import math
 
 
 def connect_to_coppelia_sim(port: int) -> int:
@@ -165,6 +166,41 @@ def get_robot_orientation(client_id: int, robot: int) -> Optional[list[float]]:
     return None
 
 
+def euler_angles_to_rotation_matrix(angles: list[float]) -> list[list[float]]:
+    '''
+    |(cos(b)*cos(g))                                    (cos(b)*(-sin(g)))                                  sin(b)                                             |
+    |sin(a))*sin(b)*cos(g) + cos(a)*sin(g)              cos(a)cos(g) - sin(a)sin(b)sin(g)                 -sin(a)*cos(b)                                |
+    | (-cos(a)*sin(b) )*cos(g) + sin(a)*sin(g)    cos(a)*sin(b)*sin(g)+ sin(a)*cos(g)    cos(a)*cos(b)                                    | 
+    '''
+    alpha_in_rads = angles[0]
+    beta_in_rads = angles[1]
+    gamma_in_rads = angles[2]
+
+    return [
+        [
+            math.cos(beta_in_rads)*math.cos(gamma_in_rads),
+            -math.cos(beta_in_rads)*math.sin(gamma_in_rads),
+            math.sin(beta_in_rads)
+        ],
+
+        [
+            math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.cos(gamma_in_rads) + math.cos(alpha_in_rads)*math.sin(gamma_in_rads),
+            math.cos(alpha_in_rads)*math.cos(gamma_in_rads) -math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads),
+            - math.sin(alpha_in_rads)* math.cos(beta_in_rads)  
+
+        ],
+
+        
+        [
+            (-math.cos(alpha_in_rads)*math.sin(beta_in_rads) )*math.cos(gamma_in_rads) + math.sin(alpha_in_rads)*math.sin(gamma_in_rads),
+            math.cos(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads) + math.sin(alpha_in_rads)*math.cos(gamma_in_rads),
+            math.cos(alpha_in_rads)*math.cos(beta_in_rads)
+
+        ]
+
+    ]
+
+
 def main():
     client_id = connect_to_coppelia_sim(port=19999)
 
@@ -173,7 +209,7 @@ def main():
     proximity_sensors = get_sensors(client_id)
 
     _, pionner = sim.simxGetObjectHandle(
-        client_id, 'Pioneer_p3dx', sim.simx_opmode_blocking)
+        client_id, 'Graph', sim.simx_opmode_blocking)
 
     assert pionner != -1, 'Não conseguiu achar o pionner'
 
@@ -187,8 +223,6 @@ def main():
 
     '''
 
-
-
     # alpha = 0
     # beta = 0
     # gamma = 0
@@ -200,13 +234,24 @@ def main():
 
         euler_angles = get_robot_orientation(client_id, pionner)
 
+        if euler_angles:
+            rotation_matrix = euler_angles_to_rotation_matrix(euler_angles)
+            for line in rotation_matrix:
+                print(line)
+
         position = get_robot_position(client_id, pionner)
 
         print('position: ', position)
         print('euler angles: ', euler_angles)
 
-        set_motor_velocity(client_id, left_motor, velocity_left)
-        set_motor_velocity(client_id, right_motor, velocity_right)
+        
+        
+
+
+        # set_motor_velocity(client_id, left_motor, velocity_left)
+        # set_motor_velocity(client_id, right_motor, velocity_right)
+
+
 if __name__ == '__main__':
 
     main()

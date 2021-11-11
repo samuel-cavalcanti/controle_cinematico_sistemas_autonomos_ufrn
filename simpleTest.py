@@ -176,30 +176,31 @@ def euler_angles_to_rotation_matrix(angles: list[float]) -> list[list[float]]:
     beta_in_rads = angles[1]
     gamma_in_rads = angles[2]
 
-    return [
-        [
-            math.cos(beta_in_rads)*math.cos(gamma_in_rads),
-            -math.cos(beta_in_rads)*math.sin(gamma_in_rads),
-            math.sin(beta_in_rads)
-        ],
+    # return [
+    #     [
+    #         math.cos(beta_in_rads)*math.cos(gamma_in_rads),
+    #         -math.cos(beta_in_rads)*math.sin(gamma_in_rads),
+    #         math.sin(beta_in_rads)
+    #     ],
+    #     [
+    #         math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.cos(gamma_in_rads) + math.cos(alpha_in_rads)*math.sin(gamma_in_rads),
+    #         math.cos(alpha_in_rads)*math.cos(gamma_in_rads) -math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads),
+    #         - math.sin(alpha_in_rads)* math.cos(beta_in_rads)  
 
-        [
-            math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.cos(gamma_in_rads) + math.cos(alpha_in_rads)*math.sin(gamma_in_rads),
-            math.cos(alpha_in_rads)*math.cos(gamma_in_rads) -math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads),
-            - math.sin(alpha_in_rads)* math.cos(beta_in_rads)  
+    #     ],
+    #     [
+    #         (-math.cos(alpha_in_rads)*math.sin(beta_in_rads) )*math.cos(gamma_in_rads) + math.sin(alpha_in_rads)*math.sin(gamma_in_rads),
+    #         math.cos(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads) + math.sin(alpha_in_rads)*math.cos(gamma_in_rads),
+    #         math.cos(alpha_in_rads)*math.cos(beta_in_rads)
 
-        ],
+    #     ]
+    # ]
 
-        
-        [
-            (-math.cos(alpha_in_rads)*math.sin(beta_in_rads) )*math.cos(gamma_in_rads) + math.sin(alpha_in_rads)*math.sin(gamma_in_rads),
-            math.cos(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads) + math.sin(alpha_in_rads)*math.cos(gamma_in_rads),
-            math.cos(alpha_in_rads)*math.cos(beta_in_rads)
-
-        ]
-
-    ]
-
+def orientetation_theta(angles: list[float]) -> float:
+    alpha_in_rads = angles[0]
+    beta_in_rads = angles[1] 
+    gamma_in_rads = angles[2]
+    return (2 * math.acos(math.cos((alpha_in_rads + gamma_in_rads)/2) * math.cos(beta_in_rads/2)))
 
 def main():
     client_id = connect_to_coppelia_sim(port=19999)
@@ -235,21 +236,21 @@ def main():
         euler_angles = get_robot_orientation(client_id, pionner)
 
         if euler_angles:
-            rotation_matrix = euler_angles_to_rotation_matrix(euler_angles)
-            for line in rotation_matrix:
-                print(line)
+            # rotation_matrix = euler_angles_to_rotation_matrix(euler_angles)
+            orientation_robo = orientetation_theta(euler_angles)
+            print('Orientação do Robo(Theta): ', ((orientation_robo*180)/math.pi))
+            # for line in rotation_matrix:
+            #     print(line)
 
         position = get_robot_position(client_id, pionner)
 
         print('position: ', position)
         print('euler angles: ', euler_angles)
 
-        
-        
 
 
-        # set_motor_velocity(client_id, left_motor, velocity_left)
-        # set_motor_velocity(client_id, right_motor, velocity_right)
+        set_motor_velocity(client_id, left_motor, velocity_left)
+        set_motor_velocity(client_id, right_motor, velocity_right)
 
 
 if __name__ == '__main__':

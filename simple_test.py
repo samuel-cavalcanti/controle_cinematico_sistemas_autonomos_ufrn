@@ -82,7 +82,7 @@ def get_sensors(client_id: int) -> list[int]:
     return sensors
 
 
-def read_sensors(client_id: int, sensors: list[int]) -> list[float]:
+def read_sensors(client_id: int, sensors: list[int]) -> Optional[list[float]]:
 
     distances = list()
 
@@ -93,8 +93,9 @@ def read_sensors(client_id: int, sensors: list[int]) -> list[float]:
 
         if return_code == sim.simx_return_ok:
             distance = 1.0 if detection_state == False else values[2]
-
             distances.append(distance)
+        else:
+            return None
 
     return distances
 
@@ -176,31 +177,47 @@ def euler_angles_to_rotation_matrix(angles: list[float]) -> list[list[float]]:
     beta_in_rads = angles[1]
     gamma_in_rads = angles[2]
 
-    # return [
-    #     [
-    #         math.cos(beta_in_rads)*math.cos(gamma_in_rads),
-    #         -math.cos(beta_in_rads)*math.sin(gamma_in_rads),
-    #         math.sin(beta_in_rads)
-    #     ],
-    #     [
-    #         math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.cos(gamma_in_rads) + math.cos(alpha_in_rads)*math.sin(gamma_in_rads),
-    #         math.cos(alpha_in_rads)*math.cos(gamma_in_rads) -math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads),
-    #         - math.sin(alpha_in_rads)* math.cos(beta_in_rads)  
+    return [
+        [
+            math.cos(beta_in_rads)*math.cos(gamma_in_rads),
+            -math.cos(beta_in_rads)*math.sin(gamma_in_rads),
+            math.sin(beta_in_rads)
+        ],
+        [
+            math.sin(alpha_in_rads)*math.sin(beta_in_rads)*math.cos(gamma_in_rads) +
+            math.cos(alpha_in_rads)*math.sin(gamma_in_rads),
+            math.cos(alpha_in_rads)*math.cos(gamma_in_rads) -
+            math.sin(alpha_in_rads)*math.sin(beta_in_rads) *
+            math.sin(gamma_in_rads),
+            - math.sin(alpha_in_rads) * math.cos(beta_in_rads)
 
-    #     ],
-    #     [
-    #         (-math.cos(alpha_in_rads)*math.sin(beta_in_rads) )*math.cos(gamma_in_rads) + math.sin(alpha_in_rads)*math.sin(gamma_in_rads),
-    #         math.cos(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads) + math.sin(alpha_in_rads)*math.cos(gamma_in_rads),
-    #         math.cos(alpha_in_rads)*math.cos(beta_in_rads)
+        ],
+        [
+            (-math.cos(alpha_in_rads)*math.sin(beta_in_rads)) *
+            math.cos(gamma_in_rads) + math.sin(alpha_in_rads) *
+            math.sin(gamma_in_rads),
+            math.cos(alpha_in_rads)*math.sin(beta_in_rads)*math.sin(gamma_in_rads) +
+            math.sin(alpha_in_rads)*math.cos(gamma_in_rads),
+            math.cos(alpha_in_rads)*math.cos(beta_in_rads)
 
-    #     ]
-    # ]
+        ]
+    ]
+
 
 def orientetation_theta(angles: list[float]) -> float:
     alpha_in_rads = angles[0]
-    beta_in_rads = angles[1] 
+    beta_in_rads = angles[1]
     gamma_in_rads = angles[2]
     return (2 * math.acos(math.cos((alpha_in_rads + gamma_in_rads)/2) * math.cos(beta_in_rads/2)))
+
+
+def rad2deg(rads: float) -> float:
+    return rads*180/math.pi
+
+
+def simulation_is_alive(client_id: int) -> bool:
+    return sim.simxGetConnectionId(client_id) != -1
+
 
 def main():
     client_id = connect_to_coppelia_sim(port=19999)
@@ -210,7 +227,7 @@ def main():
     proximity_sensors = get_sensors(client_id)
 
     _, pionner = sim.simxGetObjectHandle(
-        client_id, 'Graph', sim.simx_opmode_blocking)
+        client_id, 'Pioneer_p3dx', sim.simx_opmode_blocking)
 
     assert pionner != -1, 'Não conseguiu achar o pionner'
 
@@ -220,39 +237,32 @@ def main():
              y:  0.050001 metros
              z:  0.13879 metros
 
-         
-
+        orientação inicial do robô angulos de euler:
+            alpha = 0
+            beta = 0
+            gamma = 0
     '''
 
-    # alpha = 0
-    # beta = 0
-    # gamma = 0
-
-    while sim.simxGetConnectionId(client_id) != -1:
+    while simulation_is_alive(client_id):
         distances = read_sensors(client_id, proximity_sensors)
 
-        velocity_left, velocity_right = pioneer_controller(distances)
+        if distances:
+            velocity_left, velocity_right = pioneer_controller(distances)
 
-        euler_angles = get_robot_orientation(client_id, pionner)
+            set_motor_velocity(client_id, left_motor, velocity_left)
+            set_motor_velocity(client_id, right_motor, velocity_right)
 
-        if euler_angles:
-            # rotation_matrix = euler_angles_to_rotation_matrix(euler_angles)
-            orientation_robo = orientetation_theta(euler_angles)
-            print('Orientação do Robo(Theta): ', ((orientation_robo*180)/math.pi))
-            # for line in rotation_matrix:
-            #     print(line)
+        euler_angles_in_rads = get_robot_orientation(client_id, pionner)
 
-        position = get_robot_position(client_id, pionner)
+        if euler_angles_in_rads:
+            robot_orientation = orientetation_theta(euler_angles_in_rads)
+            print('Orientação do Robo(Theta): ', rad2deg(robot_orientation))
 
-        print('position: ', position)
-        print('euler angles: ', euler_angles)
+        # position = get_robot_position(client_id, pionner)
 
-
-
-        set_motor_velocity(client_id, left_motor, velocity_left)
-        set_motor_velocity(client_id, right_motor, velocity_right)
+        # print('position: ', position)
+        # print('euler angles: ', euler_angles_in_rads)
 
 
 if __name__ == '__main__':
-
     main()

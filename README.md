@@ -16,7 +16,20 @@ colocada na pasta coppeliasim e se não sabe aonde colocar o seu código, coloqu
 
 ![Fluxo de dados](docs/fluxo.jpg)
 
+
+### Observações
+Para executar esse passo a passo, foi utilizado:
+- _python_ na sua versão __3.10__
+- _Coppeliasim_ na sua versão __V4.2.0 rev5__
+- instale as dependências do projeto:
+
+```shell
+pip install -r requirements.txt
+```
+
 ## Passos para executar a aplicação
+
+0. instale as dependências
 
 1. abra o coppeliasim, e abra a [simple_scene.ttt](simple_scene.ttt)  
    File -> open scene... >
@@ -29,7 +42,27 @@ colocada na pasta coppeliasim e se não sabe aonde colocar o seu código, coloqu
 python main.py
 ```
 
-### Observações
-Para executar esse passo a passo, foi utilizado:
-- _python_ na sua versão __3.10__
-- _Coppeliasim_ na sua versão __V4.2.0 rev5__
+### Testes
+
+#### visualizar testes de gerador de polinômios
+
+```shell
+# certifique-se de estar na pasta raiz do projeto
+python tests/plot_path.py 
+```
+
+
+### Gráficos dos polinómios cúbicos
+
+#### Caso normal
+![](docs/normal_case.png)
+
+
+### Quando a posição final e inicial é próxima a 90
+![](docs/special_case_1.png)
+
+### Quando somente a posição inicial é próxima a 90
+![](docs/special_case_2.png)
+
+### Quando somente a posição final é próxima a 90
+![](docs/special_case_3.png)

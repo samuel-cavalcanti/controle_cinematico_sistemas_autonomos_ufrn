@@ -1,5 +1,7 @@
 import controllers
 import coppeliasim
+from coppeliasim.sim import simxReadStringStream
+from tests.plot_path import send_path_4_drawing
 import utils
 
 
@@ -23,8 +25,22 @@ def main():
             beta = 0 radiano
             gamma = 0 radiano
     '''
+    #########################Adicionado por Júlia###################
+    initial_pos=utils.Position(0, 0, 0) 
+    final_pos=utils.Position(2.1, 2.1, 45)
+
+    x_coefficients, y_coefficients = utils.find_coefficients(initial_pos, final_pos)
+    p_x, p_y, theta_t = utils.create_path_functions(x_coefficients, y_coefficients)
+
+    path_points = utils.path_points_generator (p_x, p_y, theta_t)
+    print(path_points)
+    ################################################################
 
     while coppeliasim.simulation_is_alive(client_id):
+        #########################Adicionado por Júlia################
+        send_path_4_drawing(path_points, client_id, 0.05) #adicionado por Júlia
+        #############################################################
+
         distances = coppeliasim.read_sensors(client_id, proximity_sensors)
 
         if distances:

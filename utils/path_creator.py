@@ -97,3 +97,12 @@ def path_creator(initial_position: Position, final_position: Position) -> tuple[
     x_coefficients, y_coefficients = find_coefficients(initial_position, final_position)
     p_x, p_y, theta_t = create_path_functions(x_coefficients, y_coefficients)
     return p_x, p_y, theta_t
+
+
+###############################CRIADO POR JÚLIA#####################
+def path_points_generator(p_x, p_y, theta_t):
+    lamb = np.arange(0.0, 1.0, 0.001)
+    data = [[p_x(value), p_y(value), 0.05] for value in lamb]
+    return data
+
+####################################################################

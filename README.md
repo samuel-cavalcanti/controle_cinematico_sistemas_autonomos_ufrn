@@ -71,6 +71,7 @@ python tests/plot_path.py
 
 ## Demonstração do gerador de caminhos no CoppeliaSim
 ![gerador de caminhos](https://img.youtube.com/vi/eXVkFRJU0hI/maxresdefault.jpg)
+https://youtu.be/eXVkFRJU0hI  
 
 [comment]: <> (https://youtu.be/eXVkFRJU0hI)
 

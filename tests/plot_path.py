@@ -1,11 +1,8 @@
 import os
 import sys
-import ctypes
-import time
 
 import numpy as np
 from matplotlib import pyplot as plt
-from coppeliasim.sim import simxPackFloats, simxUnpackFloats, simxWriteStringStream, simx_opmode_oneshot
 
 sys.path.append(os.getcwd())
 from utils import Position, find_coefficients, create_path_functions
@@ -66,16 +63,6 @@ def plot_position(initial_pos: Position, final_pos: Position):
     print(title)
     ax.set(title=title)
     plt.draw()
- 
-
- ############ ADICIONADO POR JÚLIA #########################################################
-def send_path_4_drawing (path, clientID, sleep_time=0.07):
-    for point in path:
-        packedData = simxPackFloats(point)
-        raw_bytes = (ctypes.c_ubyte * len(packedData)).from_buffer_copy(packedData)
-        returnCode = simxWriteStringStream(clientID, "path_coord", packedData, simx_opmode_oneshot)
-    time.sleep(sleep_time)
-############################################################################################
 
 
 def main():

@@ -7,7 +7,8 @@ Esse sistema está organizado da seguinte forma:
 - main.py
 
 todo controlador deve ficar na pasta [controllers](controllers), toda nova função do simulador (CoppeliaSim) deve ser
-colocada na pasta coppeliasim e se não sabe aonde colocar o seu código, coloque no [utils](utils).
+colocada na pasta [coppeliasim](coppeliasim), muito provavelmente no arquivo [coppeliasim.py](coppeliasim/coppeliasim.py)
+e se não sabe aonde colocar o seu código, coloque no [utils](utils).
 
 - **OS CONTROLADORES NÃO DEVEM CONHECER AS FUNÇÕES DO SIMULADOR**
 
@@ -66,3 +67,10 @@ python tests/plot_path.py
 
 ### Quando somente a posição final é próxima a 90
 ![](docs/special_case_3.png)
+
+
+## Demonstração do gerador de caminhos no CoppeliaSim
+![gerador de caminhos](https://img.youtube.com/vi/eXVkFRJU0hI/maxresdefault.jpg)
+
+[comment]: <> (https://youtu.be/eXVkFRJU0hI)
+

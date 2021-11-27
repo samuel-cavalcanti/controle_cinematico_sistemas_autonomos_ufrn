@@ -99,10 +99,10 @@ def path_creator(initial_position: Position, final_position: Position) -> tuple[
     return p_x, p_y, theta_t
 
 
-###############################CRIADO POR JÚLIA#####################
-def path_points_generator(p_x, p_y, theta_t):
+def path_points_generator(p_x, p_y, theta_t) -> list[float]:
     lamb = np.arange(0.0, 1.0, 0.001)
-    data = [[p_x(value), p_y(value), 0.05] for value in lamb]
-    return data
+    positions = []
+    for value in lamb:
+        positions += [p_x(value), p_y(value), 0.05]
 
-####################################################################
+    return positions

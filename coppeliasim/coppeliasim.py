@@ -90,7 +90,7 @@ def read_sensors(client_id: int, sensors: list[int]) -> Optional[list[float]]:
             client_id, sensor, sim.simx_opmode_streaming)
 
         if return_code == sim.simx_return_ok:
-            distance = 1.0 if detection_state == False else values[2]
+            distance = 1.0 if not detection_state else values[2]
             distances.append(distance)
         else:
             return None
@@ -143,3 +143,11 @@ def get_pioneer_p3dx(client_id: int) -> int:
     assert pionner != -1, 'Não conseguiu achar o pionner'
 
     return pionner
+
+
+def send_path_4_drawing(path: list[float], client_id: int):
+    """"    path é ou vetor de floats na seguinte ordem [x,y,z,x,y,z,x,y,z...]
+            onde x,y,z é o valor da coordenada x,y,z de um ponto do caminho.
+    """
+    packed_data = sim.simxPackFloats(path)
+    sim.simxWriteStringStream(client_id, "path_coord", packed_data, sim.simx_opmode_blocking)

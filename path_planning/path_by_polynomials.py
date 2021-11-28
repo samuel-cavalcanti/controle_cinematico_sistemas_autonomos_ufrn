@@ -2,24 +2,23 @@ from typing import Callable
 
 import numpy as np
 
+from utils import Position, deg2rad
 
-
-
-DELTA = 2
+DELTA = deg2rad(2)
 
 
 def is_in_undefined_region(angle_in_degree: float) -> bool:
-    return 90 - DELTA <= angle_in_degree <= 90 + DELTA
+    return np.pi/2 - DELTA <= angle_in_degree <= np.pi/2 + DELTA
 
 
 def find_coefficients(initial_position: Position, final_position: Position) -> tuple[list[float], list[float]]:
     delta_x = final_position.x - initial_position.x
     delta_y = final_position.y - initial_position.y
-    d_i = np.tan(deg2rad(initial_position.theta_in_degree))
-    d_f = np.tan(deg2rad(final_position.theta_in_degree))
+    d_i = np.tan(initial_position.theta_in_rads)
+    d_f = np.tan(final_position.theta_in_rads)
 
-    final_angle_is_problematic = is_in_undefined_region(final_position.theta_in_degree)
-    initial_angle_is_problematic = is_in_undefined_region(initial_position.theta_in_degree)
+    final_angle_is_problematic = is_in_undefined_region(final_position.theta_in_rads)
+    initial_angle_is_problematic = is_in_undefined_region(initial_position.theta_in_rads)
 
     if initial_angle_is_problematic and final_angle_is_problematic:
         a_0 = initial_position.x

@@ -5,7 +5,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 sys.path.append(os.getcwd())
-from utils import Position, find_coefficients, create_path_functions
+from utils import Position, deg2rad
+
+from path_planning import path_by_polynomials
 
 N_DIGITS = 2
 
@@ -23,12 +25,12 @@ def increment_plot():
 
 
 def position_to_string(pos: Position):
-    return f"({pos.x},{pos.y},{pos.theta_in_degree})"
+    return f"({pos.x},{pos.y},{pos.theta_in_rads})"
 
 
 def plot_position(initial_pos: Position, final_pos: Position):
-    x_coefficients, y_coefficients = find_coefficients(initial_pos, final_pos)
-    p_x, p_y, theta_t = create_path_functions(x_coefficients, y_coefficients)
+    x_coefficients, y_coefficients = path_by_polynomials.find_coefficients(initial_pos, final_pos)
+    p_x, p_y, theta_t = path_by_polynomials.create_path_functions(x_coefficients, y_coefficients)
 
     polynomial_x = coefficients_to_polynomial_string(x_coefficients)
     polynomial_y = coefficients_to_polynomial_string(y_coefficients)
@@ -51,7 +53,6 @@ def plot_position(initial_pos: Position, final_pos: Position):
     ax.grid()
     ax.scatter(p_x(0.5), p_y(0.5), c='g')
     plt.draw()
-    plt.savefig(f'initial-{position_to_string(initial_pos)} final-{position_to_string(final_pos)}')
 
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)
@@ -66,15 +67,15 @@ def plot_position(initial_pos: Position, final_pos: Position):
 
 
 def main():
-    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, 45))
+    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(45)))
 
-    plot_position(initial_pos=Position(0, 0, 90), final_pos=Position(10, 10, 90))
+    plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, deg2rad(90)))
 
-    plot_position(initial_pos=Position(0, 0, 90), final_pos=Position(10, 10, 0))
+    plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, 0))
 
-    plot_position(initial_pos=Position(0, 0, 45), final_pos=Position(10, 10, 90))
+    plot_position(initial_pos=Position(0, 0, deg2rad(45)), final_pos=Position(10, 10, deg2rad(90)))
 
-    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, 90))
+    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(90)))
 
     plt.show()
 

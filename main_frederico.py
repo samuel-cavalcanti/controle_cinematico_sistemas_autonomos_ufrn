@@ -61,9 +61,9 @@ def main():
     initial = utils.Position(x=-1.2945, y=0.050001, theta_in_rads=0)
     final = utils.Position(2.1, 2.1, utils.deg2rad(45))
 
-    draw_path(client_id, initial_pos=initial, final_pos=final)
-
     federico_controller = create_federico_controller(desired_pos=final)
+
+    draw_path(client_id, initial_pos=initial, final_pos=final)
 
     while coppeliasim.simulation_is_alive(client_id):
 

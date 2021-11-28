@@ -60,8 +60,8 @@ https://youtu.be/eXVkFRJU0hI
 
 
 ## Demonstração do Controlador de Posição Frederico
-![ Controlador de Posição Frederico](https://img.youtube.com/vi/rTR_Y_8MqkM/maxresdefault.jpg)
-https://youtu.be/rTR_Y_8MqkM 
+![ Controlador de Posição Frederico](https://img.youtube.com/vi/6g_MIypgDQY/maxresdefault.jpg)
+https://youtu.be/6g_MIypgDQY
 
-[comment]: <> (https://youtu.be/eXVkFRJU0hI)
+
 

@@ -1,18 +1,8 @@
-from dataclasses import dataclass
 from typing import Callable
 
 import numpy as np
 
 
-@dataclass
-class Position:
-    x: float
-    y: float
-    theta_in_degree: float
-
-
-def deg2rad(degree: float) -> float:
-    return degree * np.pi / 180
 
 
 DELTA = 2
@@ -99,7 +89,7 @@ def path_creator(initial_position: Position, final_position: Position) -> tuple[
     return p_x, p_y, theta_t
 
 
-def path_points_generator(p_x, p_y, theta_t) -> list[float]:
+def path_points_generator(p_x, p_y) -> list[float]:
     lamb = np.arange(0.0, 1.0, 0.001)
     positions = []
     for value in lamb:

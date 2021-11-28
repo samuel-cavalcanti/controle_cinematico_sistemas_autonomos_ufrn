@@ -134,6 +134,10 @@ def simulation_is_alive(client_id: int) -> bool:
     return sim.simxGetConnectionId(client_id) != -1
 
 
+def stop_simulation(client_id: int):
+    sim.simxStopSimulation(client_id, sim.simx_opmode_blocking)
+
+
 def get_pioneer_p3dx(client_id: int) -> int:
     robot_name = 'Pioneer_p3dx'
     mode = sim.simx_opmode_blocking

@@ -47,3 +47,11 @@ def orientation_theta(angles: list[float]) -> float:
 
 def rad2deg(rads: float) -> float:
     return rads * 180 / math.pi
+
+
+def deg2rad(degree: float) -> float:
+    return degree * math.pi / 180
+
+
+def euclidean_distance(x: float, y: float) -> float:
+    return math.sqrt(x ** 2 + y ** 2)

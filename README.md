@@ -40,7 +40,11 @@ pip install -r requirements.txt
 3. execute a aplicação em python:
 
 ```shell
-python main.py
+python main_braitenberg.py # testar o controlador braitenberg
+```
+
+```shell
+python main_frederico.py # para testar o controlador de Posição Frederico
 ```
 
 ### Testes
@@ -73,5 +77,9 @@ python tests/plot_path.py
 ![gerador de caminhos](https://img.youtube.com/vi/eXVkFRJU0hI/maxresdefault.jpg)
 https://youtu.be/eXVkFRJU0hI  
 
+
+## Demonstração do Controlador de Posição Frederico
+![ Controlador de Posição Frederico](https://img.youtube.com/vi/rTR_Y_8MqkM/maxresdefault.jpg)
+https://youtu.be/rTR_Y_8MqkM 
 [comment]: <> (https://youtu.be/eXVkFRJU0hI)
 

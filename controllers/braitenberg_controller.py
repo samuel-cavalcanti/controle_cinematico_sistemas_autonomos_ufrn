@@ -10,15 +10,17 @@ BRAITENBERG_LEFT = [-0.2, -0.4, -0.6, -0.8, -1, -1.2, -1.4, -1.6, 0.0, 0.0, 0.0,
 
 BRAITENBERG_RIGHT = [-1.6, -1.4, -1.2, -1, -0.8, -0.6, -0.4, -0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
+from robots_kinematics.pioneer import PioneerWheelVelocity
 
-def braitenberg_controller(distances: list[float]) -> tuple[float, float]:
+
+def braitenberg_controller(sonar_distances: list[float]) -> PioneerWheelVelocity:
     delta_detection_dist = NO_DETECTION_DIST - MAX_DETECTION_DIST
 
     v_0 = 2
 
     detect = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    for index, distance in enumerate(distances):
+    for index, distance in enumerate(sonar_distances):
 
         if distance < NO_DETECTION_DIST:
 
@@ -37,4 +39,4 @@ def braitenberg_controller(distances: list[float]) -> tuple[float, float]:
         v_left = b_left * detect_value + v_left
         v_right = b_right * detect_value + v_right
 
-    return v_left, v_right
+    return PioneerWheelVelocity(right=v_right, left=v_left)

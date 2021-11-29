@@ -149,6 +149,21 @@ def get_pioneer_p3dx(client_id: int) -> int:
     return pionner
 
 
+def get_target(client_id: int) -> int:
+    object_name = 'target'
+    mode = sim.simx_opmode_blocking
+
+    _, target = sim.simxGetObjectHandle(client_id, object_name, mode)
+
+    assert target != -1, f'Não conseguiu achar o {object_name}'
+
+    return target
+
+
+def set_object_position(client_id: int, object_id: int, position: list[float]):
+    sim.simxSetObjectPosition(client_id, object_id, -1, position, operationMode=sim.simx_opmode_blocking)
+
+
 def send_path_4_drawing(path: list[float], client_id: int):
     """"    path é ou vetor de floats na seguinte ordem [x,y,z,x,y,z,x,y,z...]
             onde x,y,z é o valor da coordenada x,y,z de um ponto do caminho.

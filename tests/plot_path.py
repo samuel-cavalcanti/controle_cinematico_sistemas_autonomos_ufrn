@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 sys.path.append(os.getcwd())
-from utils import Position, deg2rad
+from utils import Position, deg2rad, euclidean_distance
 
 from path_planning import path_by_polynomials
 
@@ -35,14 +35,27 @@ def plot_position(initial_pos: Position, final_pos: Position):
     polynomial_x = coefficients_to_polynomial_string(x_coefficients)
     polynomial_y = coefficients_to_polynomial_string(y_coefficients)
     print(polynomial_x)
-
     print(polynomial_y)
 
-    t = np.arange(0.0, 1.0, 0.001)
+    def dx(lam: float) -> float:
+        return x_coefficients[1] + 2 * x_coefficients[2] * lam + 3 * x_coefficients[3] * lam ** 2
+
+    def dy(lam: float) -> float:
+        return y_coefficients[1] + 2 * y_coefficients[2] * lam + 3 * y_coefficients[3] * lam ** 2
+
+    def dl(lam) -> float:
+        return np.sqrt(dx(lam) ** 2 + dy(lam) ** 2)
+
+    lamp = np.arange(0.0, 1.0, 0.001)
+
+    t = np.linspace(0, 1, num=10000)
+    length = np.trapz(dl(t), t)
+    print("l: ", length)
+    print("l: ", euclidean_distance(initial_pos.x - final_pos.x, initial_pos.y - final_pos.y))
 
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)
-    ax.plot(p_x(t), p_y(t))
+    ax.plot(p_x(lamp), p_y(lamp))
     title = f'posição inicial: {position_to_string(initial_pos)} , posição final {position_to_string(final_pos)}  do robô com $\lambda$ entre [0,1] '
     ax.set(title=title)
     ax.set_xlabel('$x(\lambda) =' + polynomial_x + '$')
@@ -56,7 +69,7 @@ def plot_position(initial_pos: Position, final_pos: Position):
 
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)
-    ax.plot(t, theta_t(t))
+    ax.plot(lamp, theta_t(lamp))
     ax.scatter(0.5, theta_t(0.5), c='g')
     dy_string = coefficients_to_derivative_polynomial(y_coefficients)
     dx_string = coefficients_to_derivative_polynomial(x_coefficients)
@@ -67,15 +80,16 @@ def plot_position(initial_pos: Position, final_pos: Position):
 
 
 def main():
-    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(45)))
+    plot_position(initial_pos=Position(x=-1.2945, y=0.050001, theta_in_rads=0),
+                  final_pos=Position(2.1, 2.1, deg2rad(45)))
 
-    plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, deg2rad(90)))
+    # plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, deg2rad(90)))
 
-    plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, 0))
+    # plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, 0))
 
-    plot_position(initial_pos=Position(0, 0, deg2rad(45)), final_pos=Position(10, 10, deg2rad(90)))
+    # plot_position(initial_pos=Position(0, 0, deg2rad(45)), final_pos=Position(10, 10, deg2rad(90)))
 
-    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(90)))
+    # plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(90)))
 
     plt.show()
 

@@ -37,21 +37,9 @@ def plot_position(initial_pos: Position, final_pos: Position):
     print(polynomial_x)
     print(polynomial_y)
 
-    def dx(lam: float) -> float:
-        return x_coefficients[1] + 2 * x_coefficients[2] * lam + 3 * x_coefficients[3] * lam ** 2
-
-    def dy(lam: float) -> float:
-        return y_coefficients[1] + 2 * y_coefficients[2] * lam + 3 * y_coefficients[3] * lam ** 2
-
-    def dl(lam) -> float:
-        return np.sqrt(dx(lam) ** 2 + dy(lam) ** 2)
+    print("l: ", euclidean_distance(initial_pos.x - final_pos.x, initial_pos.y - final_pos.y))
 
     lamp = np.arange(0.0, 1.0, 0.001)
-
-    t = np.linspace(0, 1, num=10000)
-    length = np.trapz(dl(t), t)
-    print("l: ", length)
-    print("l: ", euclidean_distance(initial_pos.x - final_pos.x, initial_pos.y - final_pos.y))
 
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)

@@ -9,9 +9,8 @@ from utils.pid import PID
 class FredericoController:
     __position_controller: PID
     __orientation_controller: PID
-    __desired_pos: Position
 
-    def __init__(self, position_controller: PID, orientation_controller: PID, desired: Position):
+    def __init__(self, position_controller: PID, orientation_controller: PID):
         """
             Esse Controlador buscar chegar no ponto de referência independente da sua orientação, para isso ele utiliza
             um PID que envia sinal de velocidade linear e um PID que envia sinal de velocidade angular, o PID que envia
@@ -21,12 +20,11 @@ class FredericoController:
          """
         self.__position_controller = position_controller
         self.__orientation_controller = orientation_controller
-        self.__desired_pos = desired
 
-    def step(self, current: Position) -> PioneerWheelVelocity:
+    def step(self, current: Position, desired_pos: Position) -> PioneerWheelVelocity:
         """Calculo da referencia"""
-        delta_x = self.__desired_pos.x - current.x
-        delta_y = self.__desired_pos.y - current.y
+        delta_x = desired_pos.x - current.x
+        delta_y = desired_pos.y - current.y
         delta_l = euclidean_distance(delta_x, delta_y)
         delta_theta = np.arctan2(delta_y, delta_x) - current.theta_in_rads
 

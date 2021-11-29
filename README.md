@@ -47,6 +47,10 @@ python main_braitenberg.py # testar o controlador braitenberg
 python main_frederico.py # para testar o controlador de Posição Frederico
 ```
 
+```shell
+python main_path_follow.py # para testar o controlador Frederico com gerador de trajetórias
+```
+
 ### Testes
 
 [Gráficos do gerador de caminhos](gerador_de_caminhos_plot.md)
@@ -55,13 +59,15 @@ python main_frederico.py # para testar o controlador de Posição Frederico
 
 
 ## Demonstração do gerador de caminhos no CoppeliaSim
-![gerador de caminhos](https://img.youtube.com/vi/eXVkFRJU0hI/maxresdefault.jpg)
-https://youtu.be/eXVkFRJU0hI  
+[![gerador de caminhos](https://img.youtube.com/vi/eXVkFRJU0hI/maxresdefault.jpg)](https://youtu.be/eXVkFRJU0hI)
 
 
 ## Demonstração do Controlador de Posição Frederico
-![ Controlador de Posição Frederico](https://img.youtube.com/vi/6g_MIypgDQY/maxresdefault.jpg)
-https://youtu.be/6g_MIypgDQY
+[![Controlador de Posição Frederico](https://img.youtube.com/vi/6g_MIypgDQY/maxresdefault.jpg)](https://youtu.be/6g_MIypgDQY)
 
+
+
+## Demonstração do Controlador Frederico com gerador de trajetórias
+[![Controlador com gerador de trajetórias](https://img.youtube.com/vi/7QbRW0o1lis/maxresdefault.jpg)](https://youtu.be/7QbRW0o1lis)
 
 

@@ -8,7 +8,7 @@ DELTA = deg2rad(2)
 
 
 def is_in_undefined_region(angle_in_degree: float) -> bool:
-    return np.pi/2 - DELTA <= angle_in_degree <= np.pi/2 + DELTA
+    return np.pi / 2 - DELTA <= angle_in_degree <= np.pi / 2 + DELTA
 
 
 def find_coefficients(initial_position: Position, final_position: Position) -> tuple[list[float], list[float]]:
@@ -64,6 +64,22 @@ def find_coefficients(initial_position: Position, final_position: Position) -> t
         b_3 = 3 * d_f * delta_x - 2 * delta_y - d_f * a_2 - (2 * d_f - d_i) * a_1
 
     return [a_0, a_1, a_2, a_3], [b_0, b_1, b_2, b_3]
+
+
+def calculate_path_length(x_coefficients: list[float], y_coefficients: list[float]) -> float:
+    def dx(lam: float) -> float:
+        return x_coefficients[1] + 2 * x_coefficients[2] * lam + 3 * x_coefficients[3] * lam ** 2
+
+    def dy(lam: float) -> float:
+        return y_coefficients[1] + 2 * y_coefficients[2] * lam + 3 * y_coefficients[3] * lam ** 2
+
+    def dl(lam) -> float:
+        return np.sqrt(dx(lam) ** 2 + dy(lam) ** 2)
+
+    t = np.linspace(0, 1, num=1000)
+    length = np.trapz(dl(t), t)
+
+    return length
 
 
 def create_path_functions(x_coefficients: list[float], y_coefficients: list[float]) -> \

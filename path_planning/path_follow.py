@@ -48,16 +48,16 @@ class PathFollow:
 
         return velocity
 
-    def step(self, time_in_seconds: float) -> tuple[float, float, float]:
-        v_t = self.__velocity_function(time_in_seconds)
+    def step(self, time_in_seconds: float) -> Position:
+        v_t = self.__velocity_function
 
-        def p_lambda(lambda_value: float) -> float:
+        def p_lambda(lambda_value: float, t: float) -> float:
             dl = np.sqrt(self.__delta_x(lambda_value) ** 2 + self.__delta_y(lambda_value) ** 2)
             dt = time_in_seconds - self.__last_time
-            return v_t * dt / dl
+            return v_t(t) * dt / dl
 
-        lambda_t = self.__last_lambda + p_lambda(self.__last_lambda)
+        lambda_t = self.__last_lambda + p_lambda(self.__last_lambda, time_in_seconds)
         self.__last_lambda = lambda_t
         self.__last_time = time_in_seconds
 
-        return self.__x_lambda(lambda_t), self.__y_lambda(lambda_t), self.__theta(lambda_t)
+        return Position(self.__x_lambda(lambda_t), self.__y_lambda(lambda_t), self.__theta(lambda_t))

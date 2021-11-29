@@ -23,7 +23,7 @@ def is_arrival(current: Position, desired: Position) -> bool:
     return arrival_x and arrival_y
 
 
-def create_federico_controller(desired_pos: Position):
+def create_federico_controller() -> controllers.FredericoController:
     k_p = 0.9145
     k_i = k_p / 1.9079
     k_d = k_p * 0.085
@@ -34,8 +34,7 @@ def create_federico_controller(desired_pos: Position):
     k_i = 0.15
     pid_orientation = PID(k_p, k_d, k_i, set_point=0)
     controller = controllers.FredericoController(position_controller=pid_position,
-                                                 orientation_controller=pid_orientation,
-                                                 desired=desired_pos)
+                                                 orientation_controller=pid_orientation)
 
     return controller
 
@@ -61,7 +60,7 @@ def main():
     initial = utils.Position(x=-1.2945, y=0.050001, theta_in_rads=0)
     final = utils.Position(2.1, 2.1, utils.deg2rad(45))
 
-    federico_controller = create_federico_controller(desired_pos=final)
+    federico_controller = create_federico_controller()
 
     draw_path(client_id, initial_pos=initial, final_pos=final)
 
@@ -80,7 +79,7 @@ def main():
                 coppeliasim.set_motor_velocity(client_id, left_motor, 0.0)
                 coppeliasim.set_motor_velocity(client_id, right_motor, 0.0)
             else:
-                pioneer_velocity = federico_controller.step(current_pos)
+                pioneer_velocity = federico_controller.step(current_pos, desired_pos=final)
                 coppeliasim.set_motor_velocity(client_id, left_motor, pioneer_velocity.left)
                 coppeliasim.set_motor_velocity(client_id, right_motor, pioneer_velocity.right)
 

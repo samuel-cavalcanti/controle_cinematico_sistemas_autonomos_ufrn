@@ -4,7 +4,8 @@ import controllers
 import coppeliasim
 import utils
 from path_planning import path_by_polynomials
-from utils import Position
+from path_planning.path_follow import PathFollow
+from utils import Position, PID
 
 
 def draw_path(client_id: int, initial_pos: Position, final_pos: Position):
@@ -16,12 +17,31 @@ def draw_path(client_id: int, initial_pos: Position, final_pos: Position):
     coppeliasim.send_path_4_drawing(path_points, client_id)
 
 
+def create_federico_controller() -> controllers.FredericoController:
+    k_p = 1.0145
+    k_i = k_p / 2.9079
+    k_d = k_p * 0.085
+    """Constantes Kp Ki Kd retiradas da tese de Federico"""
+    pid_position = PID(k_p, k_i, k_d, set_point=0)
+    k_p = 0.4
+    k_d = k_p * 0.0474
+    k_i = 0.15
+    pid_orientation = PID(k_p, k_d, k_i, set_point=0)
+    controller = controllers.FredericoController(position_controller=pid_position,
+                                                 orientation_controller=pid_orientation)
+
+    return controller
+
+
 def main():
     client_id = coppeliasim.connect_to_coppelia_sim(port=19999)
 
     left_motor, right_motor = coppeliasim.get_motors(client_id)
 
     pioneer = coppeliasim.get_pioneer_p3dx(client_id)
+
+    target = coppeliasim.get_target(client_id)
+
     '''
            Posição inicial do robô:
                 x: -1.2945 metros
@@ -32,17 +52,20 @@ def main():
                alpha = 0 radiano
                beta = 0 radiano
                gamma = 0 radiano
+               
        '''
 
     initial = utils.Position(x=-1.2945, y=0.050001, theta_in_rads=0)
-    final = utils.Position(2.1, 2.1, utils.deg2rad(90))
+    final = utils.Position(1.9, 2.1, utils.deg2rad(90))
     initial_time = time.time()
     current_time = time.time() - initial_time
-    max_time_in_seconds = 5.0
-    controller = controllers.PathFollowController(initial_pos=initial,
-                                                  desired_pos=final,
-                                                  initial_time_in_seconds=current_time,
-                                                  max_time=max_time_in_seconds)
+    max_time_in_seconds = 8.0
+    path_follow = PathFollow(initial_pos=initial,
+                             desired_pos=final,
+                             initial_time_in_seconds=current_time,
+                             max_time=max_time_in_seconds)
+
+    controller = create_federico_controller()
 
     draw_path(client_id, initial_pos=initial, final_pos=final)
 
@@ -57,12 +80,19 @@ def main():
             y = position[1]
             current_pos = utils.Position(x, y, theta_in_rads)
             current_time = time.time() - initial_time
-            pioneer_velocity = controller.step(current_pos, current_time)
+            desired_pos = path_follow.step(current_time)
 
-            if current_time > max_time_in_seconds:
+            print("current time: ", current_time)
+            if current_time > max_time_in_seconds :
+                coppeliasim.set_motor_velocity(client_id, left_motor, 0.0)
+                coppeliasim.set_motor_velocity(client_id, right_motor, 0.0)
                 break
+
+            pioneer_velocity = controller.step(current_pos, desired_pos)
+
             coppeliasim.set_motor_velocity(client_id, left_motor, pioneer_velocity.left)
             coppeliasim.set_motor_velocity(client_id, right_motor, pioneer_velocity.right)
+            coppeliasim.set_object_position(client_id, target, [desired_pos.x, desired_pos.y, +2.0000e-03])
 
 
 if __name__ == '__main__':

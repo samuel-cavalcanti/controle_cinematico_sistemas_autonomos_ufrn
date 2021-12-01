@@ -103,6 +103,15 @@ def set_motor_velocity(client_id: int, motor_id: int, velocity: float):
         client_id, motor_id, velocity, sim.simx_opmode_streaming)
 
 
+def get_object_velocity(client_id: int, object_id: int) -> Optional[tuple[list[float], list[float]]]:
+    return_code, linear_velocity, angular_velocity = sim.simxGetObjectVelocity(
+        client_id, object_id, sim.simx_opmode_streaming)
+    if return_code == sim.simx_return_ok:
+        return linear_velocity, angular_velocity
+
+    return None
+
+
 def get_robot_position(client_id: int, robot: int) -> Optional[list[float]]:
     '''Retorna a posição do robo referente ao referencial global'''
     return_code, position = sim.simxGetObjectPosition(
@@ -161,7 +170,8 @@ def get_target(client_id: int) -> int:
 
 
 def set_object_position(client_id: int, object_id: int, position: list[float]):
-    sim.simxSetObjectPosition(client_id, object_id, -1, position, operationMode=sim.simx_opmode_blocking)
+    sim.simxSetObjectPosition(client_id, object_id, -1,
+                              position, operationMode=sim.simx_opmode_blocking)
 
 
 def send_path_4_drawing(path: list[float], client_id: int):
@@ -169,4 +179,5 @@ def send_path_4_drawing(path: list[float], client_id: int):
             onde x,y,z é o valor da coordenada x,y,z de um ponto do caminho.
     """
     packed_data = sim.simxPackFloats(path)
-    sim.simxWriteStringStream(client_id, "path_coord", packed_data, sim.simx_opmode_blocking)
+    sim.simxWriteStringStream(client_id, "path_coord",
+                              packed_data, sim.simx_opmode_blocking)

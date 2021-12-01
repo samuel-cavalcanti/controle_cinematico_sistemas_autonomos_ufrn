@@ -14,6 +14,11 @@ def is_in_undefined_region(angle_in_degree: float) -> bool:
 def find_coefficients(initial_position: Position, final_position: Position) -> tuple[list[float], list[float]]:
     delta_x = final_position.x - initial_position.x
     delta_y = final_position.y - initial_position.y
+    """
+        Perceba que para encontrar os coeficientes dos polinômios precisamos calcular a tangente do angulo
+        logo, podemos perceber que se um dos angulos for 90 graus a tangente não existe, por tanto é preciso
+        tratar esses casos. O tratamento dessas situações foi feita por Diogo e pode ser encontrado em sua tese.
+    """
     d_i = np.tan(initial_position.theta_in_rads)
     d_f = np.tan(final_position.theta_in_rads)
 

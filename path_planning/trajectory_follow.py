@@ -6,7 +6,7 @@ from path_planning import path_by_polynomials
 from utils import Position
 
 
-class PathFollow:
+class TrajectoryFollow:
     __delta_x: Callable[[float], float]
     __delta_y: Callable[[float], float]
     __velocity_function: Callable[[float], float]

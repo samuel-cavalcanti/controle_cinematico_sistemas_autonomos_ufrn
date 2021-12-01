@@ -17,7 +17,12 @@ class PID:
 
     def step(self, feedback_value: float) -> float:
         error = feedback_value - self.__set_point
-
+        """ Como não foi sincronizado o tempo da simulação
+            com o tempo da aplicação vulgo controlador, então
+            foi decido que o dt, ou variação do tempo seria
+            igual a 1
+            ou seja erro/dt = erro
+         """
         p = error
 
         self.__integral_value += error

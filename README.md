@@ -63,11 +63,11 @@ python main_path_follow.py # para testar o controlador Frederico com gerador de 
 
 
 ## Demonstração do Controlador de Posição Frederico
-[![Controlador de Posição Frederico](https://img.youtube.com/vi/6g_MIypgDQY/maxresdefault.jpg)](https://youtu.be/OEe0XtFPN4g)
+[![Controlador de Posição Frederico](https://img.youtube.com/vi/OEe0XtFPN4g/maxresdefault.jpg)](https://youtu.be/OEe0XtFPN4g)
 
 
 
 ## Demonstração do Controlador Frederico com gerador de trajetórias
-[![Controlador com gerador de trajetórias](https://img.youtube.com/vi/7QbRW0o1lis/maxresdefault.jpg)](https://youtu.be/pNImd-6fzWw)
+[![Controlador com gerador de trajetórias](https://img.youtube.com/vi/pNImd-6fzWw/maxresdefault.jpg)](https://youtu.be/pNImd-6fzWw)
 
 

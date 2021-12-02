@@ -104,6 +104,12 @@ def set_motor_velocity(client_id: int, motor_id: int, velocity: float):
 
 
 def get_object_velocity(client_id: int, object_id: int) -> Optional[tuple[list[float], list[float]]]:
+    """
+        Retorna a velocidade linear e angular do objeto, respectivamente.
+        onde a velocidade linear é composta pelas componentes x,y,z, posição 0,1,2 da lista
+        e velocidade angular são as variações dos angulos de euler yaw , pitch, roll, no tempo.
+        Velocidade linear está em metros por segundo, angulos de euler em rads por segundo 
+    """
     return_code, linear_velocity, angular_velocity = sim.simxGetObjectVelocity(
         client_id, object_id, sim.simx_opmode_streaming)
     if return_code == sim.simx_return_ok:
@@ -112,10 +118,10 @@ def get_object_velocity(client_id: int, object_id: int) -> Optional[tuple[list[f
     return None
 
 
-def get_robot_position(client_id: int, robot: int) -> Optional[list[float]]:
+def get_object_position(client_id: int, object_id: int) -> Optional[list[float]]:
     '''Retorna a posição do robo referente ao referencial global'''
     return_code, position = sim.simxGetObjectPosition(
-        client_id, robot, -1, sim.simx_opmode_streaming)
+        client_id, object_id, -1, sim.simx_opmode_streaming)
 
     if return_code == sim.simx_return_ok:
         return position
@@ -123,11 +129,11 @@ def get_robot_position(client_id: int, robot: int) -> Optional[list[float]]:
     return None
 
 
-def get_robot_orientation(client_id: int, robot: int) -> Optional[list[float]]:
+def get_object_orientation(client_id: int, object_id: int) -> Optional[list[float]]:
     '''Retorna os angulos de euler: yaw , pitch, roll referente ao referencial global'''
 
     return_code, orientation = sim.simxGetObjectOrientation(
-        client_id, robot, -1, sim.simx_opmode_streaming)
+        client_id, object_id, -1, sim.simx_opmode_streaming)
 
     if return_code == sim.simx_return_ok:
         return orientation

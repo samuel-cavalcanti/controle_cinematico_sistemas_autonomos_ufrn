@@ -48,7 +48,7 @@ python main_frederico.py # para testar o controlador de Posição Frederico
 ```
 
 ```shell
-python main_path_follow.py # para testar o controlador Frederico com gerador de trajetórias
+python main_trajectory_follow.py # para testar o controlador Frederico com gerador de trajetórias
 ```
 
 ### Testes

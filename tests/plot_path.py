@@ -69,18 +69,16 @@ def plot_position(initial_pos: Position, final_pos: Position):
 
 
 def main():
+
+    plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, deg2rad(90)))
+
+    plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, 0))
+
     initial = Position(x=-1.2945, y=0.050001, theta_in_rads=0)
     final = Position(1.9, 2.1, deg2rad(90))
-    plot_position(initial_pos=initial,
-                  final_pos=final)
+    plot_position(initial_pos=initial,final_pos=final)
 
-    # plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, deg2rad(90)))
-
-    # plot_position(initial_pos=Position(0, 0, deg2rad(90)), final_pos=Position(10, 10, 0))
-
-    # plot_position(initial_pos=Position(0, 0, deg2rad(45)), final_pos=Position(10, 10, deg2rad(90)))
-
-    # plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(90)))
+    plot_position(initial_pos=Position(0, 0, 0), final_pos=Position(10, 10, deg2rad(90)))
 
     plt.show()
 

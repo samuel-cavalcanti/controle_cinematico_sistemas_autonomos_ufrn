@@ -11,9 +11,9 @@ from pathlib import Path
 
 
 def is_arrival(current: Position, desired: Position) -> bool:
-    precision = 0.1
-    arrival_x = np.abs(current.x - desired.x) <= precision
-    arrival_y = np.abs(current.y - desired.y) <= precision
+    precision_in_meters = 0.05
+    arrival_x = np.abs(current.x - desired.x) <= precision_in_meters
+    arrival_y = np.abs(current.y - desired.y) <= precision_in_meters
     return arrival_x and arrival_y
 
 
@@ -120,7 +120,7 @@ def main():
             coppeliasim.set_motor_velocity(
                 client_id, right_motor, pioneer_velocity.right)
 
-    simulation_recorder.save(Path('main_frederico.csv'))
+    simulation_recorder.save(Path('output').joinpath('main_frederico.csv'))
 
 
 if __name__ == '__main__':

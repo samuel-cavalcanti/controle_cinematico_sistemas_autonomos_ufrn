@@ -1,5 +1,4 @@
 import time
-import csv
 import controllers
 import coppeliasim
 import utils
@@ -19,15 +18,6 @@ def draw_path(client_id: int, initial_pos: Position, final_pos: Position):
 
     coppeliasim.send_path_4_drawing(path_points, client_id)
 
-
-def to_csv(samples: list[list[float]], headers: list[str], file_path: Path):
-
-    with open(file_path, mode='w') as file:
-
-        writer = csv.writer(file)
-
-        writer.writerow(headers)
-        writer.writerows(samples)
 
 
 def create_federico_controller() -> controllers.FredericoController:
@@ -149,7 +139,7 @@ def main():
 
     
 
-    simulation_recorder.save(Path('main_trajectory_follow.csv'))
+    simulation_recorder.save(Path('output').joinpath('main_trajectory_follow.csv'))
 
 
 if __name__ == '__main__':

@@ -1,82 +1,10 @@
-from __future__ import annotations
+from functools import reduce
+import numpy as np
 import os
 import sys
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.patches import Polygon
 sys.path.append(os.getcwd())
 
-from configuration_space.configuration_space import get_normal_vectors_from_convex_polygon, make_configuration_space
-
-
-def type_a_colision_check(normal_vector: np.ndarray, polygon_points: np.ndarray):
-
-    length = len(polygon_points)
-
-    for i, _ in enumerate(polygon_points):
-
-        w_1 = polygon_points[i - 1] - polygon_points[i]
-
-        w_2 = polygon_points[(i + 1) % length] - polygon_points[i]
-
-        inner_prodoct_w_1 = np.dot(normal_vector, w_1)
-
-        inner_prodoct_w_2 = np.dot(normal_vector, w_2)
-
-
-def draw_normals(polygon_points: np.ndarray, center: np.ndarray):
-    normals = get_normal_vectors_from_convex_polygon(polygon_points)
-
-    for n in normals:
-        mean_x = center[0]
-        mean_y = center[1]
-        plt.plot([mean_x, n[0] + mean_x], [mean_y, n[1] + mean_y])
-
-    plt.draw()
-
-
-def sort_vector_by_angle(vectors: np.ndarray) -> np.ndarray:
-
-    def vector_angle(vector: np.ndarray) -> float:
-        theta = np.arctan2(vector[1], vector[0])
-        if theta >= 0:
-            return theta
-        else:
-            return 2*np.pi + theta
-
-    angles = np.array([vector_angle(v) for v in vectors])
-
-    arg_sort = np.argsort(angles)
-
-    return vectors[arg_sort]  # > vector_angle(vector_b)
-
-
-def test_sort_vectors(triangle: np.ndarray, rectangle: np.ndarray):
-    """ nesse teste, o triangulo é o nosso robô"""
-    triangle_normals = get_normal_vectors_from_convex_polygon(triangle)
-
-    rectangle_normals = get_normal_vectors_from_convex_polygon(rectangle)
-
-    inverted_triangle_normals = -triangle_normals
-
-    print('inverted_triangle_normals')
-
-    sorted_inverted_triangle_normals = sort_vector_by_angle(inverted_triangle_normals)
-
-    sorted_rectangle_normals = sort_vector_by_angle(rectangle_normals)
-
-    for n in sorted_inverted_triangle_normals:
-        theta = np.arctan2(n[1], n[0])
-        theta_in_degree = np.rad2deg(theta)
-        theta_in_degree = theta_in_degree if theta_in_degree >= 0 else 360 + theta_in_degree
-        print(f'theta: {theta_in_degree  }')
-
-    print('sorted_rectangle_normals')
-    for n in sorted_rectangle_normals:
-        theta = np.arctan2(n[1], n[0])
-        theta_in_degree = np.rad2deg(theta)
-        theta_in_degree = theta_in_degree if theta_in_degree >= 0 or theta_in_degree >= -0 else 360 + theta_in_degree
-        print(f'theta: {theta_in_degree  }')
+from configuration_space.configuration_space import make_configuration_space
 
 
 def main():
@@ -108,10 +36,6 @@ def main():
         [-2*b/3, -h/3],
     ])
 
-    # [2.5, 2.0],
-    #     [2.5, 2.5],
-    #     [2.3, 2.25],
-
     """
       .(3)              .(2)
 
@@ -126,20 +50,45 @@ def main():
         [1.5, 1.5],
     ])
 
-    draw_normals(rectangle, np.array([1.6, 1.6]))
-
-    draw_normals(triangle, np.array([0, 0]))
-
     list_of_vertices = make_configuration_space(triangle, [rectangle])
+    vertices = list_of_vertices[0]
+
+    expected_vertices = [
+        rectangle[0] - triangle[2],  # b_1 - a_3
+
+        rectangle[1] - triangle[2],  # b_2 - a_3
+        rectangle[1] - triangle[0],  # b_2 - a_1
+
+        rectangle[2] - triangle[0],  # b_3 - a_1
+
+        rectangle[3] - triangle[0],  # b_4 - a_1
+
+        rectangle[0] - triangle[1],  # b_1 - a_2
+    ]
+
+    def is_in_array(element, array: np.ndarray) -> bool:
+        for value in array:
+            if (value == element).all():
+                return True
+        return False
+
+    assert is_in_array(np.array([1, 2]), vertices) == False, "esse vertice não deveria existir na lista"
+    assert is_in_array(np.array([1.86666667, 1.83333333]), vertices) == False, "esse vertice não deveria existir na lista"
+
+    for expected_vertice in expected_vertices:
+        assert is_in_array(
+            expected_vertice, vertices), f"Foi calculado na mão esse exemplo e o vertice {expected_vertice} deveria está em {vertices}"
+
+    assert len(vertices) == 8, "O número total de vertices deve ser igual a 8 onde b_3 - a_1 se repete 2 vezes"
+
+    b_3_a_1 = rectangle[2] - triangle[0]
     
-   
-    vertices = np.array(list_of_vertices[0])
 
-    plt.scatter(vertices[:, 0], vertices[:, 1])
-    plt.scatter(rectangle[:, 0], rectangle[:, 1])
-    plt.scatter(triangle[:, 0], triangle[:, 1])
+    def sum_true_booleans(total: int, boolean_vector: np.ndarray):
+        return total + 1 if boolean_vector.all() else total
 
-    plt.show()
+
+    assert reduce(sum_true_booleans, vertices == b_3_a_1, 0) == 2, "O vertice b_3 - a_1 deve se repetir 2 vezes"
 
 
 if __name__ == '__main__':

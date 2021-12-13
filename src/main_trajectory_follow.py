@@ -35,7 +35,7 @@ def create_federico_controller() -> controllers.FredericoController:
 
 
 def main():
-    client_id = coppeliasim.connect_to_coppelia_sim(port=19999)
+    client_id = coppeliasim.try_to_connect_to_coppeliasim(port=19999)
 
     left_motor, right_motor = coppeliasim.get_motors(client_id)
 

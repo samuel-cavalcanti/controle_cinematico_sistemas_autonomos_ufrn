@@ -16,7 +16,9 @@ from . import sim
 """
 
 
-def connect_to_coppelia_sim(port: int) -> int:
+def try_to_connect_to_coppeliasim(port: int, ip: str = '127.0.0.1') -> int:
+    """Tenta conectar com o Simulador caso não consiga ele encerra a aplicação"""
+
     sim.simxFinish(-1)  # just in case, close all opened connections
 
     wait_until_connect = True
@@ -24,7 +26,7 @@ def connect_to_coppelia_sim(port: int) -> int:
     time_out_in_ms = 5000
     conn_thread_cycle = 5
 
-    client_id = sim.simxStart('127.0.0.1', port, wait_until_connect, do_not_reconnect_once_disconnect,
+    client_id = sim.simxStart(ip, port, wait_until_connect, do_not_reconnect_once_disconnect,
                               time_out_in_ms, conn_thread_cycle)  # Connect to CoppeliaSim
 
     if client_id == -1:
@@ -119,7 +121,9 @@ def get_object_velocity(client_id: int, object_id: int) -> Optional[tuple[list[f
 
 
 def get_object_position(client_id: int, object_id: int) -> Optional[list[float]]:
-    '''Retorna a posição do robo referente ao referencial global'''
+    '''Retorna a posição do objeto referente ao referencial global
+        Posição [x,y,z]
+    '''
     return_code, position = sim.simxGetObjectPosition(
         client_id, object_id, -1, sim.simx_opmode_streaming)
 
@@ -162,6 +166,18 @@ def get_pioneer_p3dx(client_id: int) -> int:
     assert pionner != -1, 'Não conseguiu achar o pionner'
 
     return pionner
+
+
+def get_object(client_id: int, object_name: str) -> int:
+    mode = sim.simx_opmode_blocking
+
+    return_code, object_id = sim.simxGetObjectHandle(client_id, object_name, mode)
+
+    assert return_code == sim.simx_return_ok, 'Não foi possível se conectar ao simulador'
+
+    assert object_id != -1, f'Não conseguiu achar o {object_name}'
+
+    return object_id
 
 
 def get_target(client_id: int) -> int:

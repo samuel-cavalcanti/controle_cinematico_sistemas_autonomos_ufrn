@@ -1,7 +1,7 @@
 from typing import Callable
 import numpy as np
-from path_and_trajectory_planning import path_by_polynomials
-from utils import Position
+from src.modules.path_and_trajectory_planning import path_by_polynomials
+from src.modules.utils import Position
 
 
 class TrajectoryFollow:

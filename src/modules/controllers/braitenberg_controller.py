@@ -1,16 +1,17 @@
+from modules.robots_kinematics.pioneer import PioneerWheelVelocity
+
 """
        Controlador que desvia de obstáculos do Pioneer. Quando se insere um Pioneer em uma simulação
        ele já vem com esse controlador,mas escrito em LUA. Foi passado esse Algoritmo para Python
        para fins de testar o Legacy Remote-API
 """
+
 NO_DETECTION_DIST = 0.5
 MAX_DETECTION_DIST = 0.2
 
 BRAITENBERG_LEFT = [-0.2, -0.4, -0.6, -0.8, -1, -1.2, -1.4, -1.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 BRAITENBERG_RIGHT = [-1.6, -1.4, -1.2, -1, -0.8, -0.6, -0.4, -0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-
-from robots_kinematics.pioneer import PioneerWheelVelocity
 
 
 def braitenberg_controller(sonar_distances: list[float]) -> PioneerWheelVelocity:

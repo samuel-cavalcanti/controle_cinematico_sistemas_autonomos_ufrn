@@ -1,5 +1,4 @@
-import controllers
-import coppeliasim
+from modules import coppeliasim, controllers
 
 
 def main():

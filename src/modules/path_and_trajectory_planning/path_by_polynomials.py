@@ -2,7 +2,7 @@ from typing import Callable
 
 import numpy as np
 
-from utils import Position, deg2rad
+from modules.utils import Position, deg2rad
 
 DELTA = deg2rad(2)
 

@@ -1,9 +1,9 @@
 import numpy as np
 
-from robots_kinematics import pioneer
-from robots_kinematics.pioneer import PioneerWheelVelocity
-from utils import Position, euclidean_distance
-from utils.pid import PID
+from modules.robots_kinematics import pioneer
+from modules.robots_kinematics.pioneer import PioneerWheelVelocity
+from modules.utils import Position, euclidean_distance
+from modules.utils.pid import PID
 
 
 class FredericoController:
@@ -27,7 +27,7 @@ class FredericoController:
         delta_y = desired_pos.y - current.y
         delta_l = euclidean_distance(delta_x, delta_y)
         phi = np.arctan2(delta_y, delta_x)
-        delta_phi =  phi - current.theta_in_rads
+        delta_phi = phi - current.theta_in_rads
 
         """Controladores desacoplados"""
         linear_velocity_in_polar_system = self.__position_controller.step(delta_l * np.cos(delta_phi))

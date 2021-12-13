@@ -12,7 +12,7 @@ povoado de obstáculos, sem colidir com os mesmos.  [Detalhes e Resultados do Se
 
 
 ### Observações
-Para executar esse passo a passo, foi utilizado:
+Para a execução desse projeto, foi utilizado:
 - _python_ na sua versão __3.10__
 - _Coppeliasim_ na sua versão __V4.2.0 rev5__
 - instale as dependências do projeto:

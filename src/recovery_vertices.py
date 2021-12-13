@@ -1,5 +1,6 @@
 import dataclasses
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,7 +22,7 @@ class Polygon:
 def main():
     client_id = coppeliasim.try_to_connect_to_coppeliasim(port=19997)
     """me conectei na porta 19997 com a qual posso interagir com o simulador sem precisar iniciar a simulação"""
-    assert client_id != -1, "Não foi possível se conectar ao simulador, o CoppeliaSim está aberto ?"
+
     obstacles_id = [f'obstacle_{index}' for index in range(1, 5)]
 
     """
@@ -39,7 +40,14 @@ def main():
 
     robot = Polygon(name="Pioneer_p3dx", vertices=robot_vertices)
 
-    to_json(obstacles + [robot], Path('output').joinpath('obstacles_vertices.json'))
+    """
+    Por padrão estamos salvando qualquer dado que vem no simulador na pasta output raiz do repositório
+    """
+    output_path = Path('output')
+    if not os.path.isdir(output_path):
+        os.mkdir(output_path)
+
+    to_json(obstacles + [robot], output_path.joinpath('obstacles_vertices.json'))
 
 
 def create_obstacle(obstacle_name: str, total_vertices: int, client_id: int) -> Polygon:

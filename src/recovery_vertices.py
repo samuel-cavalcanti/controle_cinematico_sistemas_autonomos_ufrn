@@ -1,22 +1,10 @@
 import dataclasses
 import json
 import os
-from dataclasses import dataclass
 from pathlib import Path
 
 from modules.coppeliasim import coppeliasim
-
-
-@dataclass()
-class Vertex:
-    name: str
-    position: list
-
-
-@dataclass()
-class Polygon:
-    name: str
-    vertices: list[Vertex]
+from modules.utils import Polygon, Vertex
 
 
 def main():

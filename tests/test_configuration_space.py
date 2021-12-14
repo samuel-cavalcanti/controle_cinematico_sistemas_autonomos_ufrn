@@ -67,14 +67,14 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
         ]
 
         self.assertFalse(self.__is_in_array(np.array([1, 2]), vertices),
-                         msg="esse vertice não deveria existir na lista")
+                         msg="esse vertex não deveria existir na lista")
 
         self.assertFalse(self.__is_in_array(np.array([1.86666667, 1.83333333]), vertices),
-                         msg="esse vertice não deveria existir na lista")
+                         msg="esse vertex não deveria existir na lista")
 
         for expected_vertex in expected_vertices:
             self.assertTrue(self.__is_in_array(expected_vertex, vertices),
-                            msg=f"Foi calculado na mão esse exemplo e o vertice {expected_vertex} deveria está em {vertices}")
+                            msg=f"Foi calculado na mão esse exemplo e o vertex {expected_vertex} deveria está em {vertices}")
 
         self.assertEqual(len(vertices), 8,
                          msg="O número total de vertices deve ser igual a 8 onde b_3 - a_1 se repete 2 vezes")
@@ -82,7 +82,7 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
         b_3_a_1 = rectangle[2] - triangle[0]
 
         self.assertEqual(reduce(self.__sum_true_booleans, vertices == b_3_a_1, 0), 2,
-                         msg="O vertice b_3 - a_1 deve se repetir 2 vezes")
+                         msg="O vertex b_3 - a_1 deve se repetir 2 vezes")
 
     @staticmethod
     def __sum_true_booleans(total: int, boolean_vector: np.ndarray):

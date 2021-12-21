@@ -1,3 +1,4 @@
+import dataclasses
 import json
 import os
 import sys
@@ -30,49 +31,69 @@ def polygon_2_numpy_array(polygon: Polygon) -> np.ndarray:
     return np.array([v.position for v in polygon.vertices])
 
 
+def draw_polygon(vertices_positions: np.ndarray):
+    pyplot.fill(vertices_positions[:, 0], vertices_positions[:, 1])
+    pyplot.scatter(vertices_positions[:, 0].mean(), vertices_positions[:, 1].mean())
+
+
 def draw_vertices(vertices_positions: np.ndarray):
     pyplot.scatter(vertices_positions[:, 0], vertices_positions[:, 1])
+    pyplot.draw()
 
-    pyplot.scatter(vertices_positions[:, 0].mean(), vertices_positions[:, 1].mean())
-    pyplot.fill(vertices_positions[:, 0], vertices_positions[:, 1])
+
+def draw_polygons(polygon: list[np.ndarray]):
+    [draw_polygon(sorting_vertices(p)) for p in polygon]
+    pyplot.draw()
 
 
 def main():
     polygons = load_json(Path('output/obstacles_vertices.json'))
+
     robot = polygons[-1]
-    robot_vertices_positions = polygon_2_numpy_array(robot)
+    robot_vertices = polygon_2_numpy_array(robot)
     obstacles = [polygon_2_numpy_array(p) for p in polygons[:-1]]
 
-    [draw_vertices(o) for o in obstacles]
+    total_vertices = 0
+    for obstacle in obstacles:
+        total_vertices += obstacle.shape[0] + robot_vertices.shape[0]
 
-    draw_vertices(robot_vertices_positions)
-
-    width = np.max(robot_vertices_positions[:, 0]) - np.min(robot_vertices_positions[:, 0])
-    height = np.max(robot_vertices_positions[:, 1]) - np.min(robot_vertices_positions[:, 1])
-    """
-            (p2) =(-width/2,height/2) .       .(p2) =(width/2,height/2)
-            (p3) =(-width/2,-height/2).       .(p1) =(width/2,-height/2)
-    """
-    robot_vertices_positions = np.array(
-        [
-            [width / 2, -height / 2],
-            [width / 2, height / 2],
-            [-width / 2, height / 2],
-            [-width / 2, -height / 2],
-        ]
-    )
-
-    pyplot.draw()
+    print("total_vertices", total_vertices)
+    exit(1)
+    draw_polygons(obstacles)
+    draw_polygon(robot_vertices)
     pyplot.savefig('output/work_space.pdf', dpi=1200)
-
-    confi_obstacles_vetices = configuration_space.make_configuration_space(robot_vertices_positions, obstacles)
 
     pyplot.figure(2)
 
-    [draw_vertices(sorting_vertices(np.array(o))) for o in confi_obstacles_vetices]
+    obstacles_on_configuration_space = configuration_space.make_configuration_space(robot_vertices, obstacles)
 
-    pyplot.draw()
-    pyplot.savefig('output/confi_space.pdf', dpi=1200)
+    draw_polygons(obstacles_on_configuration_space)
+    pyplot.savefig('output/conf_space.pdf', dpi=1200)
+
+    configuration_space_polygons = list()
+    for index, obstacle in enumerate(obstacles_on_configuration_space):
+        configuration_space_polygons.append(vertices_to_polygon(obstacle, f"obstacle_{index}"))
+
+    to_json(configuration_space_polygons, Path("output/conf_space_obstacles.json"))
+
+
+def vertices_to_polygon(vertices: np.ndarray, polygon_name: str) -> Polygon:
+    return Polygon(polygon_name, np_array_to_vertex(vertices, polygon_name))
+
+
+def np_array_to_vertex(vertices: np.ndarray, polygon_name: str) -> list[Vertex]:
+    list_of_vertices = list()
+    for index, vertex_array in enumerate(vertices):
+        list_of_vertices.append(Vertex(name=f"{polygon_name}_P{index}", position=vertex_array.tolist()))
+
+    return list_of_vertices
+
+
+def to_json(obstacles: list[Polygon], path_file: Path):
+    dict_obstacles: list[dict] = [dataclasses.asdict(o) for o in obstacles]
+
+    with open(path_file, 'w') as json_file:
+        json_file.write(json.dumps(dict_obstacles))
 
 
 def sorting_vertices(vertices: np.ndarray):

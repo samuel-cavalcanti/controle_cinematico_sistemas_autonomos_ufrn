@@ -1,44 +1,6 @@
 import numpy as np
 
-from . import sorted_nodes_creator
-from .find_obstacle_vertices_in_configuration_space import FindObstacleVerticesInConfigurationSpace
-from .normal_vector_wrapper import NormalVectorWrapper
-
-
-def normal_vector(initial_point: np.ndarray, final_point: np.ndarray) -> np.ndarray:
-    vector = final_point - initial_point
-    """ 
-        é feita uma rotação de 90 graus com o vetor, que se traduz em
-        x = -y
-        y = x
-    """
-    return np.array([-vector[1], vector[0]])
-
-
-def get_normal_vectors_from_convex_polygon(polygon_points: np.ndarray) -> np.ndarray:
-    """
-        Esse algoritmo parte que os pontos já estejam  ordenados de maneira circular:
-
-            .(4)b-1   .(3)
-
-        .(5)b           .(2)
-
-            .(6)b+1    .(1)
-
-    """
-
-    length = len(polygon_points)
-
-    normal_vectors = [normal_vector(initial_point=polygon_points[0], final_point=polygon_points[-1])]
-
-    def get_normal_vector(index: int) -> np.ndarray:
-        final_point = polygon_points[index]
-        initial_point = polygon_points[index + 1]
-        return normal_vector(initial_point, final_point)
-
-    normal_vectors += [get_normal_vector(index) for index in range(length - 1)]
-
-    return np.array(normal_vectors)
+from .convex_hull_jarvis import ConvexHULL
 
 
 def make_configuration_space(robot_vertices: np.ndarray, obstacles_vertices: list[np.ndarray]) -> list[np.ndarray]:
@@ -55,51 +17,66 @@ def make_configuration_space(robot_vertices: np.ndarray, obstacles_vertices: lis
             .(6)b+1    .(1)
 
     """
-    robot_normals = get_normal_vectors_from_convex_polygon(robot_vertices)
 
     """
-            Um NormalVectorWrapper nada mais é um struct que encapsula os vetores normais com algumas informações
-            adicionais que são utilizadas durante a execução do algoritmo de busca, busca essa que será a verificação
-            se um vetor normal do robô está entre dois vetores normais dos obstáculos.
-            Caso entre essas 3 normais, significa que deve-se ser gerado um vértice. Para gerar o vértice precisa
-            dessas informações adicionais. Para dizer se o vetor normal é do robô ou do obstáculo, precisa das
-            informações adicionais
-            
-            informações adicionais:
-                o vértice que deve subtraído para obter o vértice no espaço de configuração 
-                se o vetor normal é ou não do robô
-                o próximo nó (essa informação só irá ser obtida ao final da criação da lista ordenada)
+        1. Pick a local coordinate system on A including an origin point. This will be the reference point on the robot.
+        mudar o referencial dos vertices para o referencial do robô.
+        No caso o referencial do robô é o centroide do seu poligono convexo que pode ser encontrado com a média dos pontos 
+        no caso, o referencial do robô tem a mesma orientação a matrix homogenia ficaria assim:
 
+        | 1 0 0 mean(x) |
+        | 0 1 0 mean(y) |
+        | 0 0 1  1      |
+        ou seja é uma simples translação.
     """
 
-    robot_nodes = [NormalVectorWrapper(is_robot_vector=True,
-                                       next_node_index=None,
-                                       normal_vec=normal,
-                                       vertex=robot_vertices[index])
-                   for index, normal in enumerate(-robot_normals)]
+    new_origin = np.array([
+        robot_vertices[:, 0].mean(),
+        robot_vertices[:, 1].mean(),
+    ])
 
-    def obstacles_vertices_to_configuration_space_vertices(obstacle_vertices: np.ndarray) -> np.ndarray:
-        obstacle_normals = get_normal_vectors_from_convex_polygon(obstacle_vertices)
+    robot = new_origin - robot_vertices
 
-        obstacle_nodes = [NormalVectorWrapper(is_robot_vector=False,
-                                              next_node_index=None,
-                                              normal_vec=normal,
-                                              vertex=obstacle_vertices[index])
-                          for index, normal in enumerate(obstacle_normals)]
+    obstacles = [o - new_origin for o in obstacles_vertices]
 
-        sorted_nodes = sorted_nodes_creator.create_sorted_nodes(obstacle_nodes=obstacle_nodes,
-                                                                robot_nodes=robot_nodes)
+    """ 2. Reflect (flip) A about the origin of its local coordinate system (to get -A)."""
+    reflected_robot = -robot
 
-        return FindObstacleVerticesInConfigurationSpace().execute(sorted_nodes, obstacle_nodes)
-
-    return [obstacles_vertices_to_configuration_space_vertices(vertices) for vertices in obstacles_vertices]
-
-    """ ordenar por angulo, do menor angulo para o maior
-         O(nlog(n))
-         
-         gerar indices O(n)
-
-         busca linear em um anel, O(n)
-
-         complexidade: O(nlog(n))         
+    """3. Attach -A at every obstacle_vertex of B to compute the vertices of the resulting shape B ⊕ -A.
+        A ⊕ B = {a + b | a ∈; A, b ∈; B}
     """
+    configuration_space_obstacles = list()
+    for obstacle_vertices in obstacles:
+        configuration_space_vertices = list()
+        for obstacle_vertex in obstacle_vertices:
+            for robot_vertex in reflected_robot:
+                configuration_space_vertices.append(robot_vertex + obstacle_vertex)
+
+        configuration_space_obstacles.append(np.array(configuration_space_vertices))
+
+    """  4. Compute the convex hull of the set of the resulting vertices 
+        Não precisamos de todos os vertices dos obstáculos para criar o seu
+        polígono, na verdade precisamos os mais externos. Para obter os
+        vertices mais externos, então usamos o algoritmo convex hull 
+        https://www.geeksforgeeks.org/convex-hull-using-divide-and-conquer-algorithm/
+    """
+
+    return [convex_hull(obstacle) for obstacle in configuration_space_obstacles]
+
+
+def convex_hull(vertices: np.ndarray) -> np.ndarray:
+    return ConvexHULL(vertices).run()
+
+
+def find_left_most_point(vertices: np.ndarray) -> np.ndarray:
+    """Encontrando o vértice mais a a esquerda do conjunto de vertices"""
+    left_vertex = vertices[0]
+
+    for vertex in vertices:
+        if vertex[0] < left_vertex[0]:
+            left_vertex = vertex
+        elif vertex[0] == left_vertex[0]:
+            if vertex[1] > left_vertex[1]:
+                left_vertex = vertex
+
+    return left_vertex

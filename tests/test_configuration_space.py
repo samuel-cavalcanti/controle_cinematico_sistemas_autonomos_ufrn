@@ -33,6 +33,8 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
         self.assert_vertices(expected_vertices, result_vertices)
 
     def test_make_configuration_space(self):
+        """Robot Motion Planning -Jean Claude Latombe example test"""
+
         """
 
                              .(2)
@@ -75,6 +77,8 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
 
         triangle = triangle - robot_origin
         rectangle = rectangle - robot_origin
+
+     
 
         expected_vertices = np.array([
             rectangle[0] - triangle[1],  # b_1 - a_2

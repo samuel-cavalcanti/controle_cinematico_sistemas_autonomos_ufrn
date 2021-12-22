@@ -33,13 +33,13 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
         self.assert_vertices(expected_vertices, result_vertices)
 
     def test_make_configuration_space(self):
-
         """
 
-                        .(2)
+                             .(2)
 
 
-                .(3)    .(1)
+                .(3)    
+                          .(1)
         """
         b = 0.2
         h = 0.5
@@ -68,17 +68,29 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
 
         vertices = list_of_vertices[0]
 
+        robot_origin = np.array([
+            triangle[:, 0].mean(),
+            triangle[:, 1].mean(),
+        ])
+
+        triangle = triangle - robot_origin
+        rectangle = rectangle - robot_origin
+
         expected_vertices = np.array([
+            rectangle[0] - triangle[1],  # b_1 - a_2
+
             rectangle[0] - triangle[2],  # b_1 - a_3
 
             rectangle[1] - triangle[2],  # b_2 - a_3
+
             rectangle[1] - triangle[0],  # b_2 - a_1
 
             rectangle[2] - triangle[0],  # b_3 - a_1
 
-            rectangle[3] - triangle[0],  # b_4 - a_1
+            rectangle[2] - triangle[1],  # b_3 - a_2
 
-            rectangle[0] - triangle[1],  # b_1 - a_2
+            rectangle[3] - triangle[1],  # b_4 - a_2
+
         ])
 
         self.assertFalse(self.__is_in_array(np.array([1, 2]), vertices),
@@ -88,18 +100,6 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
                          msg="esse vertex não deveria existir na lista")
 
         self.assert_vertices(expected_vertices, vertices)
-
-        self.assertEqual(len(vertices), 8,
-                         msg="O número total de vertices deve ser igual a 8 onde b_3 - a_1 se repete 2 vezes")
-
-        b_3_a_1 = rectangle[2] - triangle[0]
-
-        self.assertEqual(reduce(self.__sum_true_booleans, vertices == b_3_a_1, 0), 2,
-                         msg="O vertex b_3 - a_1 deve se repetir 2 vezes")
-
-    @staticmethod
-    def __sum_true_booleans(total: int, boolean_vector: np.ndarray):
-        return total + 1 if boolean_vector.all() else total
 
     @staticmethod
     def __is_in_array(element, array: np.ndarray) -> bool:

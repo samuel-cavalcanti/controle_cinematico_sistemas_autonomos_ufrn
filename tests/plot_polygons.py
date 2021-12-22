@@ -1,18 +1,18 @@
-import dataclasses
-import json
 import os
 import sys
-from pathlib import Path
+sys.path.append(os.getcwd())
 
+"""Cuidado com o autoformat do arquivo, pode quebrar o import: from src.modules.configuration_space import configuration_space"""
+
+from matplotlib import pyplot
+from src.modules.configuration_space import configuration_space
+from src.modules.utils import Polygon, Vertex
+import dataclasses
+import json
+from pathlib import Path
 import numpy as np
 
-sys.path.append(os.getcwd())
-from src.modules.utils import Polygon, Vertex
-from src.modules.configuration_space import configuration_space
-from matplotlib import pyplot
 
-
-# from matplotlib.patches import Polygon as matplotPoly
 
 def map_dict_to_polygon(poly_dict: dict) -> Polygon:
     vertices = [Vertex(**v) for v in poly_dict['vertices']]
@@ -53,28 +53,51 @@ def main():
     robot_vertices = polygon_2_numpy_array(robot)
     obstacles = [polygon_2_numpy_array(p) for p in polygons[:-1]]
 
-    total_vertices = 0
-    for obstacle in obstacles:
-        total_vertices += obstacle.shape[0] + robot_vertices.shape[0]
+    draw_mapping(robot_vertices, obstacles)
 
-    print("total_vertices", total_vertices)
-    exit(1)
-    draw_polygons(obstacles)
-    draw_polygon(robot_vertices)
-    pyplot.savefig('output/work_space.pdf', dpi=1200)
+    b = 0.2
+    h = 0.5
 
-    pyplot.figure(2)
+    triangle = np.array([
+        [b / 3, -h / 3],  # a_1
+        [b / 3 + 0.1, 2 * h / 3 + 0.1],  # a_2
+        [-2 * b / 3, -h / 3 + 0.2],  # a_3
+    ])
 
+    rectangle = np.array([
+        [1.7, 1.5],
+        [1.7, 1.7],
+        [1.5, 1.7],
+        [1.5, 1.5],
+    ])
+
+    obstacles = [rectangle]
+    robot_vertices = triangle
+
+    draw_mapping(robot_vertices, obstacles)
+
+    pyplot.show()
+
+
+def draw_mapping(robot_vertices: np.ndarray, obstacles: np.ndarray):
     obstacles_on_configuration_space = configuration_space.make_configuration_space(robot_vertices, obstacles)
 
+    draw_work_space_and_conf_space(robot_vertices, obstacles, obstacles_on_configuration_space)
+
+    draw_vertices(np.array([[robot_vertices[:, 0].mean(), robot_vertices[:, 1].mean()]]))
+
+    pyplot.figure(pyplot.gcf().number + 1)
+
+
+def draw_work_space_and_conf_space(robot_vertices: np.ndarray, obstacles: np.ndarray, obstacles_on_configuration_space: np.ndarray):
+    draw_polygons(obstacles)
+    draw_polygon(robot_vertices)
+    # pyplot.savefig('output/work_space.pdf', dpi=1200)
+
+    pyplot.figure(pyplot.gcf().number + 1)
+
     draw_polygons(obstacles_on_configuration_space)
-    pyplot.savefig('output/conf_space.pdf', dpi=1200)
-
-    configuration_space_polygons = list()
-    for index, obstacle in enumerate(obstacles_on_configuration_space):
-        configuration_space_polygons.append(vertices_to_polygon(obstacle, f"obstacle_{index}"))
-
-    to_json(configuration_space_polygons, Path("output/conf_space_obstacles.json"))
+    # pyplot.savefig('output/conf_space.pdf', dpi=1200)
 
 
 def vertices_to_polygon(vertices: np.ndarray, polygon_name: str) -> Polygon:

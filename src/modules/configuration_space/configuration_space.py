@@ -35,12 +35,22 @@ def make_configuration_space(robot_vertices: np.ndarray, obstacles_vertices: lis
         robot_vertices[:, 1].mean(),
     ])
 
-    robot = new_origin - robot_vertices
+    """ 2. Reflect (flip) A about the origin of its local coordinate system (to get -A).
+
+        para mudar o referencial do robô temos que translada-ló para sua origem
+        e também temos que  refleti-lo, ou seja
+        
+        robot = , faz com que os vertices do robô fiquem na nova origem
+        robot = -robot, reflete os vertices robô
+        então robot = -(robot_vertices - new_origin)
+        robot = -robot_vertices  + new_origin
+    """
+
+    robot =  new_origin - robot_vertices  
 
     obstacles = [o - new_origin for o in obstacles_vertices]
 
-    """ 2. Reflect (flip) A about the origin of its local coordinate system (to get -A)."""
-    reflected_robot = -robot
+   
 
     """3. Attach -A at every obstacle_vertex of B to compute the vertices of the resulting shape B ⊕ -A.
         A ⊕ B = {a + b | a ∈; A, b ∈; B}
@@ -49,7 +59,7 @@ def make_configuration_space(robot_vertices: np.ndarray, obstacles_vertices: lis
     for obstacle_vertices in obstacles:
         configuration_space_vertices = list()
         for obstacle_vertex in obstacle_vertices:
-            for robot_vertex in reflected_robot:
+            for robot_vertex in robot:
                 configuration_space_vertices.append(robot_vertex + obstacle_vertex)
 
         configuration_space_obstacles.append(np.array(configuration_space_vertices))

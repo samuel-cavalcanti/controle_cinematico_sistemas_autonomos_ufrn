@@ -32,3 +32,8 @@ Apresentar gráfico também com a função de potencial
 calculada. Implementar controlador que permita ao robô seguir
 o caminho planejado. Entregar relatório e vídeo mostrando o
 robô seguindo o caminho planejado.
+
+
+### Referências
+
+mapeamento de obstáculos para espaço de configuração [notes on configuration space](../docs/notes_on_configuration_space.md)

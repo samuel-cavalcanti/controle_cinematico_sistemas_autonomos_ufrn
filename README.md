@@ -1,4 +1,4 @@
-# Sistemas Robóticos Autónomos UFRN
+# Sistemas Robóticos Autônomos UFRN
 
 Repositório da disciplina Sistemas Robóticos autónomos.
 Nessa disciplina foi realizado os seguintes projetos:
@@ -8,8 +8,6 @@ Nessa disciplina foi realizado os seguintes projetos:
 - Desenvolver Planejadores de Caminhos para Robô Móvel que
 permitam ao mesmo executar movimentos especificados em espaço
 povoado de obstáculos, sem colidir com os mesmos.  [Detalhes e Resultados do Segundo Projeto](docs/Segundo_projeto.md)
-
-
 
 ### Observações
 Para a execução desse projeto, foi utilizado:

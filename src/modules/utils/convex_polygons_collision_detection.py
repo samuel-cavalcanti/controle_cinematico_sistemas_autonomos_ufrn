@@ -36,7 +36,7 @@ class ConvexPolygonsCollisionDetection:
 
         push_vectors = self.__push_vectors_of(edges)
 
-        return len(push_vectors) > 1
+        return len(push_vectors) >= 1
 
     def __orthogonal_edges_of(self, vertices: np.ndarray) -> list[np.ndarray]:
 

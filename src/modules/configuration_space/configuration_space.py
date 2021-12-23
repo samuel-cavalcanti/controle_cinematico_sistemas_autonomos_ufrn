@@ -69,9 +69,9 @@ def convex_hull(vertices: np.ndarray) -> np.ndarray:
 
 def minkowski_sum(robot: np.ndarray, obstacle_vertices: np.ndarray) -> np.ndarray:
     """
-    minkowski sum, é o conjunto resultante da seguite operação: 
+    minkowski sum, é o conjunto resultante da seguinte operação: 
     A ⊕ B = {a + b | a ∈; A, b ∈; B}
-    onde no nosso caso A é o robô e B é obstáculo
+    onde no nosso caso A é o robô e B é o obstáculo
     """
     configuration_space_vertices = list()
 

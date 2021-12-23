@@ -17,7 +17,7 @@ The robot's configuration space is the set of all allowed (possible) robot confi
           its configuration space is &real;<sup>2</sup>.
         </td>
         <td>
-          <img src="../assets/notes_on_configuration_space/planar.png" align="right">
+          <img src="../assets/notes_on_configuration_space/planar.png" align="right" width="400">
         </td>
       </tr>
       <tr valign="middle">
@@ -28,7 +28,7 @@ The robot's configuration space is the set of all allowed (possible) robot confi
           dimension 3 is toroidal (wrapping on itself like a donught) with point
           coordinates between 0 and 360 degrees.
         </td>
-        <td> <img src="../assets/notes_on_configuration_space/planar_rot.png" align="right">
+        <td> <img src="../assets/notes_on_configuration_space/planar_rot.png" align="right" width="400" >
         </td>
       </tr>
       <tr valign="middle">
@@ -41,7 +41,7 @@ The robot's configuration space is the set of all allowed (possible) robot confi
           &theta;<sub>1</sub> angles (from 0 to 360) and dimension 2 corresponds
           to possible &theta;<sub>2</sub> angles (from 0 to 360).
         </td>
-        <td> <img src="../assets/notes_on_configuration_space/link2D.png" align="right">
+        <td> <img src="../assets/notes_on_configuration_space/link2D.png" align="right" width="400" >
         </td>
       </tr>
     </tbody>

@@ -20,7 +20,7 @@ def coefficients_to_derivative_polynomial(coefficients: list[float]):
     return f'{round(coefficients[1], N_DIGITS)} + {round(2 * coefficients[2], N_DIGITS)}λ  + {round(3 * coefficients[3], N_DIGITS)}λ²'
 
 
-def increment_plot():
+def next_figure():
     plt.figure(plt.gcf().number + 1)
 
 
@@ -30,7 +30,7 @@ def position_to_string(pos: Position):
 
 def plot_position(initial_pos: Position, final_pos: Position):
     x_coefficients, y_coefficients = path_by_polynomials.find_coefficients(initial_pos, final_pos)
-    p_x, p_y, theta_t = path_by_polynomials.create_path_functions(x_coefficients=x_coefficients,
+    p_x, p_y, p_theta = path_by_polynomials.create_path_functions(x_coefficients=x_coefficients,
                                                                   y_coefficients=y_coefficients)
 
     polynomial_x = coefficients_to_polynomial_string(x_coefficients)
@@ -54,9 +54,9 @@ def plot_position(initial_pos: Position, final_pos: Position):
 
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)
-    theta_values = [theta_t(l) for l in lamp]
+    theta_values = [p_theta(l) for l in lamp]
     ax.plot(lamp, theta_values)
-    ax.scatter(0.5, theta_t(0.5), c='g')
+    ax.scatter(0.5, p_theta(0.5), c='g')
     dy_string = coefficients_to_derivative_polynomial(y_coefficients)
     dx_string = coefficients_to_derivative_polynomial(x_coefficients)
     title = '$\\theta(\lambda) = tan^{-1}( \\frac{' + dy_string + '}{ ' + dx_string + '})$ com $\lambda$ entre [0,1] '

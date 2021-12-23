@@ -2,7 +2,8 @@ from typing import Callable
 
 import numpy as np
 
-from modules.utils import Position, deg2rad
+from ..utils import Position, deg2rad
+
 
 DELTA = deg2rad(2)
 
@@ -93,15 +94,15 @@ def calculate_path_length(x_coefficients: list[float], y_coefficients: list[floa
 
 
 def create_path_functions(x_coefficients: list[float], y_coefficients: list[float]) -> \
-        tuple[Callable, Callable, Callable]:
+        tuple[Callable[[np.ndarray], np.ndarray], Callable[[np.ndarray], np.ndarray], Callable[[np.ndarray], np.ndarray]]:
     def polynomial_function(a, b, c, d):
         return lambda x: a + b * x + c * x ** 2 + d * x ** 3
 
     def theta(t):
-        d_y = y_coefficients[1] +  2 * y_coefficients[2] * t + 3 * y_coefficients[3] * t ** 2
+        d_y = y_coefficients[1] + 2 * y_coefficients[2] * t + 3 * y_coefficients[3] * t ** 2
 
-        d_x = x_coefficients[1] +  2 * x_coefficients[2] * t + 3 * x_coefficients[3] * t ** 2
-       
+        d_x = x_coefficients[1] + 2 * x_coefficients[2] * t + 3 * x_coefficients[3] * t ** 2
+
         return np.arctan2(d_y, d_x)
 
     x_function = polynomial_function(

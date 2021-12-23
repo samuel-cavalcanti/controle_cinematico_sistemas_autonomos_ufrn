@@ -46,23 +46,12 @@ def make_configuration_space(robot_vertices: np.ndarray, obstacles_vertices: lis
         robot = -robot_vertices  + new_origin
     """
 
-    robot =  new_origin - robot_vertices  
-
-    obstacles = [o - new_origin for o in obstacles_vertices]
-
-   
+    robot = new_origin - robot_vertices
 
     """3. Attach -A at every obstacle_vertex of B to compute the vertices of the resulting shape B ⊕ -A.
         A ⊕ B = {a + b | a ∈; A, b ∈; B}
     """
-    configuration_space_obstacles = list()
-    for obstacle_vertices in obstacles:
-        configuration_space_vertices = list()
-        for obstacle_vertex in obstacle_vertices:
-            for robot_vertex in robot:
-                configuration_space_vertices.append(robot_vertex + obstacle_vertex)
-
-        configuration_space_obstacles.append(np.array(configuration_space_vertices))
+    configuration_space_obstacles = [minkowski_sum(robot, obstacle_vertices) for obstacle_vertices in obstacles_vertices]
 
     """  4. Compute the convex hull of the set of the resulting vertices 
         Não precisamos de todos os vertices dos obstáculos para criar o seu
@@ -78,15 +67,17 @@ def convex_hull(vertices: np.ndarray) -> np.ndarray:
     return ConvexHULL(vertices).run()
 
 
-def find_left_most_point(vertices: np.ndarray) -> np.ndarray:
-    """Encontrando o vértice mais a a esquerda do conjunto de vertices"""
-    left_vertex = vertices[0]
+def minkowski_sum(robot: np.ndarray, obstacle_vertices: np.ndarray) -> np.ndarray:
+    """
+    minkowski sum, é o conjunto resultante da seguite operação: 
+    A ⊕ B = {a + b | a ∈; A, b ∈; B}
+    onde no nosso caso A é o robô e B é obstáculo
+    """
+    configuration_space_vertices = list()
 
-    for vertex in vertices:
-        if vertex[0] < left_vertex[0]:
-            left_vertex = vertex
-        elif vertex[0] == left_vertex[0]:
-            if vertex[1] > left_vertex[1]:
-                left_vertex = vertex
+    for obstacle_vertex in obstacle_vertices:
+        for robot_vertex in robot:
+            configuration_space_vertices.append(robot_vertex + obstacle_vertex)
 
-    return left_vertex
+
+    return np.array(configuration_space_vertices)

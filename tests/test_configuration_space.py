@@ -70,15 +70,15 @@ class ConfigurationSpaceTestCase(unittest.TestCase):
 
         vertices = list_of_vertices[0]
 
-        robot_origin = np.array([
+        triangle_origin = np.array([
             triangle[:, 0].mean(),
             triangle[:, 1].mean(),
         ])
-
-        triangle = triangle - robot_origin
-        rectangle = rectangle - robot_origin
-
-     
+        """  O algoritmo parte do principio que o robô esteja centralizado na origem
+             então para gerar os vertices esperados é preciso centralizar o robô antes
+             de calcular na mão cada vertice.
+        """
+        triangle = triangle - triangle_origin
 
         expected_vertices = np.array([
             rectangle[0] - triangle[1],  # b_1 - a_2

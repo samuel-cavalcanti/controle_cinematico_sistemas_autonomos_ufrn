@@ -34,6 +34,15 @@ o caminho planejado. Entregar relatório e vídeo mostrando o
 robô seguindo o caminho planejado.
 
 
+### Testes
+
+## Caminho no espaço de trabalho
+![](../assets/work_space_path.png)
+
+## Caminho no espaço de Configuração
+![](../assets/conf_space_path.png)
+
+
 ### Referências
 
 mapeamento de obstáculos para espaço de configuração [notes on configuration space](../docs/notes_on_configuration_space.md)

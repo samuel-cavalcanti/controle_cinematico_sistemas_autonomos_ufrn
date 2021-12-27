@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 from src.modules.path_and_trajectory_planning import path_by_polynomials
 from src.modules.configuration_space import configuration_space
 from src.modules.utils.plotter_2d import Plotter2D
-from src.modules.utils.convex_polygons_collision_detection import ConvexPolygonsCollisionDetection
+from modules.polygon_collision_detection.convex_polygons_collision_detection import ConvexPolygonsCollisionDetection
 import json
 from pathlib import Path
 import numpy as np

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Optional
 import numpy as np
 
-from .polygon import Polygon
+from ..utils.polygon import Polygon
 
 
 """

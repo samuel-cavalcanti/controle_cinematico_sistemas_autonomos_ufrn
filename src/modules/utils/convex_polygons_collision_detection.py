@@ -1,5 +1,5 @@
 
-
+from __future__ import annotations
 from typing import Optional
 import numpy as np
 
@@ -13,6 +13,7 @@ from .polygon import Polygon
 
 
 class ConvexPolygonsCollisionDetection:
+    """Algoritmo que detecta colisão entre 2 poligonos 2D"""
 
     __vertices_poly_a: np.ndarray
     __vertices_poly_b: np.ndarray

@@ -6,6 +6,8 @@ from pathlib import Path
 from modules.coppeliasim import coppeliasim
 from modules.utils import Polygon, Vertex
 
+NUMBER_OF_ROBOT_VERTICES = 4
+
 
 def main():
     client_id = coppeliasim.try_to_connect_to_coppeliasim(port=19997)
@@ -24,9 +26,15 @@ def main():
     obstacles = [create_obstacle(obstacles_id, total, client_id) for obstacles_id, total in
                  zip(obstacles_id, total_of_vertices)]
 
-    robot_vertices = [create_vertex(name, client_id) for name in ["P1", "P2", "P3", "P4"]]
+    vertices_name = [f'P{i}' for i in range(1, NUMBER_OF_ROBOT_VERTICES + 1)]
+
+    print(f'tentado recuperar vertices {" ".join(vertices_name) }')
+
+    robot_vertices = [create_vertex(name, client_id) for name in vertices_name]
 
     robot = Polygon(name="Pioneer_p3dx", vertices=robot_vertices)
+
+    print('vertices recuperados com sucesso!, salvando vertices na pasta output')
 
     """
     Por padrão estamos salvando qualquer dado que vem no simulador na pasta output raiz do repositório
@@ -44,6 +52,7 @@ def create_obstacle(obstacle_name: str, total_vertices: int, client_id: int) -> 
 
 
 def create_vertex(vertex_name: str, client_id: int) -> Vertex:
+    print(f'tentando buscar vertice: {vertex_name}')
     vertex_id = coppeliasim.get_object(client_id, vertex_name)
     position = coppeliasim.get_object_position(client_id, vertex_id)
     while position is None:

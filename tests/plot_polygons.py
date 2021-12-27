@@ -2,10 +2,10 @@ import os
 import sys
 sys.path.append(os.getcwd())
 
+
 from src.modules.path_and_trajectory_planning import path_by_polynomials
 from src.modules.configuration_space import configuration_space
 from src.modules.utils.plotter_2d import Plotter2D
-from modules.polygon_collision_detection.convex_polygons_collision_detection import ConvexPolygonsCollisionDetection
 import json
 from pathlib import Path
 import numpy as np
@@ -43,6 +43,24 @@ def find_polynomial_path(initial_pos: np.ndarray, final_pos: np.ndarray) -> np.n
     return np.array([[x, y] for x, y in zip(sample_x, sample_y)])
 
 
+def make_grid(limit_x: tuple[float, float], limit_y: tuple[float, float]) -> np.ndarray:
+    x_space = np.linspace(limit_x[0], limit_x[1], 50)
+    y_space = np.linspace(limit_y[0], limit_y[1], 50)
+
+    xx, yy= np.meshgrid(x_space, y_space)
+
+    grid_points= list()
+
+    for x, y in zip(xx, yy):
+        for x_value, y_value in zip(x, y):
+
+            grid_points.append([x_value, y_value])
+
+    grid_points= np.array(grid_points)
+
+    return grid_points.reshape((len(x_space), len(y_space), -1))
+
+
 def plot_test_case_data():
     """
         Robot Motion Planning -Jean Claude Latombe example
@@ -52,23 +70,23 @@ def plot_test_case_data():
         Figura 9
     """
 
-    b = 0.2
-    h = 0.5
+    b= 0.2
+    h= 0.5
 
-    triangle = np.array([
+    triangle= np.array([
         [b / 3, -h / 3],  # a_1
         [b / 3 + 0.1, 2 * h / 3 + 0.1],  # a_2
         [-2 * b / 3, -h / 3 + 0.2],  # a_3
     ])
 
-    rectangle = np.array([
+    rectangle= np.array([
         [1.7, 1.5],
         [1.7, 1.7],
         [1.5, 1.7],
         [1.5, 1.5],
     ])
 
-    plotter = Plotter2D()
+    plotter= Plotter2D()
 
     plotter.view_grid(True)
 
@@ -85,49 +103,36 @@ def plot_test_case_data():
 def plot_simulation_data():
     """
         Após a coleta dos vertices do simulador foi gerado um gráfico
-        do seu espaço de configuração e de uma tentativa de gerar um caminho  
+        do seu espaço de configuração e de uma tentativa de gerar um caminho
     """
-    polygons = load_json(Path('output').joinpath('obstacles_vertices.json'))
+    polygons= load_json(Path('output').joinpath('obstacles_vertices.json'))
 
-    robot = polygons[-1]
-    robot_vertices = polygon_2_numpy_array(robot)
-    obstacles = [polygon_2_numpy_array(p) for p in polygons[:-1]]
+    robot= polygons[-1]
+    robot_vertices= polygon_2_numpy_array(robot)
+    obstacles= [polygon_2_numpy_array(p) for p in polygons[:-1]]
 
-    work_space_limits = np.array([
+    work_space_limits= np.array([
         [-2.1850e+00, 2.2506e+00],
         [2.1850e+00, 2.2506e+00],
         [-2.1850e+00, -2.2506e+00],
         [2.1850e+00, -2.2506e+00]
     ])
 
- 
+    desired_pos= np.array([-3.8350e-01, +1.3220e+00])
+    initial_pos= np.array([-1.2705e+00, +4.7000e-02])
 
-    desired_pos = np.array([-3.8350e-01, +1.3220e+00])
-    initial_pos = np.array([-1.2705e+00, +4.7000e-02])
+    path_points= find_polynomial_path(initial_pos, final_pos=desired_pos)
 
-    path_points = find_polynomial_path(initial_pos, final_pos=desired_pos)
+    obstacles_in_c_space= configuration_space.make_configuration_space(robot_vertices, obstacles)
 
-    obstacles_in_c_space = configuration_space.make_configuration_space(robot_vertices, obstacles)
+    limit_x = (-2.1850e+00, 2.1850e+00)
+    limit_y = (-2.2506e+00, 2.2506e+00)
 
+    grid= make_grid(limit_x, limit_y)
 
-    x_space = np.linspace(-2.1850e+00, 2.1850e+00, 50)
-    y_space = np.linspace(-2.1850e+00, 2.1850e+00, 50)
+    plotter= Plotter2D()
 
-    xx, yy = np.meshgrid(x_space, y_space)
-    grid_points = list()
-    
-    # collision_detection = ConvexPolygonsCollisionDetection.from_numpy()
-
-    for x, y in zip(xx, yy):
-        for x_value, y_value in zip(x, y):
-
-            grid_points.append([x_value, y_value])
-
-    grid_points = np.array(grid_points)
-
-    plotter = Plotter2D()
-
-
+    plotter.draw_points(grid.reshape(-1,2))
     plotter.draw_points(work_space_limits)
     plotter.draw_polygons(obstacles + [robot_vertices])
     plotter.draw_lines(path_points)
@@ -137,7 +142,7 @@ def plot_simulation_data():
     plotter.next_figure()
 
     # plotter.view_grid(True)
-    plotter.draw_points(grid_points)
+    plotter.draw_points(grid.reshape(-1,2))
 
     plotter.draw_points(work_space_limits)
     plotter.draw_polygons(obstacles_in_c_space)

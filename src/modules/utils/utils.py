@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 
 def euler_angles_to_rotation_matrix(angles: list[float]) -> list[list[float]]:
@@ -13,45 +13,66 @@ def euler_angles_to_rotation_matrix(angles: list[float]) -> list[list[float]]:
 
     return [
         [
-            math.cos(beta_in_rads) * math.cos(gamma_in_rads),
-            -math.cos(beta_in_rads) * math.sin(gamma_in_rads),
-            math.sin(beta_in_rads)
+            np.cos(beta_in_rads) * np.cos(gamma_in_rads),
+            -np.cos(beta_in_rads) * np.sin(gamma_in_rads),
+            np.sin(beta_in_rads)
         ],
         [
-            math.sin(alpha_in_rads) * math.sin(beta_in_rads) * math.cos(gamma_in_rads) +
-            math.cos(alpha_in_rads) * math.sin(gamma_in_rads),
-            math.cos(alpha_in_rads) * math.cos(gamma_in_rads) -
-            math.sin(alpha_in_rads) * math.sin(beta_in_rads) *
-            math.sin(gamma_in_rads),
-            - math.sin(alpha_in_rads) * math.cos(beta_in_rads)
+            np.sin(alpha_in_rads) * np.sin(beta_in_rads) * np.cos(gamma_in_rads) +
+            np.cos(alpha_in_rads) * np.sin(gamma_in_rads),
+            np.cos(alpha_in_rads) * np.cos(gamma_in_rads) -
+            np.sin(alpha_in_rads) * np.sin(beta_in_rads) *
+            np.sin(gamma_in_rads),
+            - np.sin(alpha_in_rads) * np.cos(beta_in_rads)
 
         ],
         [
-            (-math.cos(alpha_in_rads) * math.sin(beta_in_rads)) *
-            math.cos(gamma_in_rads) + math.sin(alpha_in_rads) *
-            math.sin(gamma_in_rads),
-            math.cos(alpha_in_rads) * math.sin(beta_in_rads) * math.sin(gamma_in_rads) +
-            math.sin(alpha_in_rads) * math.cos(gamma_in_rads),
-            math.cos(alpha_in_rads) * math.cos(beta_in_rads)
+            (-np.cos(alpha_in_rads) * np.sin(beta_in_rads)) *
+            np.cos(gamma_in_rads) + np.sin(alpha_in_rads) *
+            np.sin(gamma_in_rads),
+            np.cos(alpha_in_rads) * np.sin(beta_in_rads) * np.sin(gamma_in_rads) +
+            np.sin(alpha_in_rads) * np.cos(gamma_in_rads),
+            np.cos(alpha_in_rads) * np.cos(beta_in_rads)
 
         ]
     ]
 
 
-def orientation_theta(angles: list[float]) -> float:
-    alpha_in_rads = angles[0]
-    beta_in_rads = angles[1]
-    gamma_in_rads = angles[2]
-    return 2 * math.acos(math.cos((alpha_in_rads + gamma_in_rads) / 2) * math.cos(beta_in_rads / 2))
-
-
 def rad2deg(rads: float) -> float:
-    return rads * 180 / math.pi
+    return rads * 180 / np.pi
 
 
 def deg2rad(degree: float) -> float:
-    return degree * math.pi / 180
+    return degree * np.pi / 180
 
 
 def euclidean_distance(x: float, y: float) -> float:
-    return math.sqrt(x ** 2 + y ** 2)
+    return np.sqrt(x ** 2 + y ** 2)
+
+
+def sorting_vertices(vertices: np.ndarray):
+    """
+    Dado um polígono convexo você pode organizar os vertices
+    pela fase entre o ponto médio do polígono com seus vértices
+    """
+    mean_x = np.mean(vertices[:, 0])
+    mean_y = np.mean(vertices[:, 1])
+    mean_point = np.array([mean_x, mean_y])
+
+    def sort_by_angle(vertex: np.ndarray) -> float:
+        vector = vertex - mean_point
+        theta = np.arctan2(vector[1], vector[0])
+        return theta if theta >= 0 else 2 * np.pi + theta
+
+    return np.array(sorted(vertices, key=sort_by_angle))
+
+
+def rotation_in_theta(theta_in_rads:float,array_2d:np.ndarray)->np.ndarray:
+
+    rotation_matrix = [
+        [np.cos(theta_in_rads),-np.sin(theta_in_rads)],
+        [np.sin(theta_in_rads), np.cos(theta_in_rads)]
+    ] 
+
+    return np.dot(rotation_matrix,array_2d)    
+

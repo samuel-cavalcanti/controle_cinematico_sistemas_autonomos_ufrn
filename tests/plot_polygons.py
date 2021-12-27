@@ -1,74 +1,30 @@
-from matplotlib import pyplot
-
 import os
 import sys
 sys.path.append(os.getcwd())
 
 from src.modules.path_and_trajectory_planning import path_by_polynomials
 from src.modules.configuration_space import configuration_space
-from src.modules.utils import Polygon, Vertex, Position
+from src.modules.utils.plotter_2d import Plotter2D
+from src.modules.utils.convex_polygons_collision_detection import ConvexPolygonsCollisionDetection
 import json
 from pathlib import Path
 import numpy as np
-
+from src.modules.utils import Polygon, Position
 
 
 
 """Cuidado com o autoformat do arquivo, pode quebrar o import: from src.modules.configuration_space import configuration_space"""
 
 
-def map_dict_to_polygon(poly_dict: dict) -> Polygon:
-    vertices = [Vertex(**v) for v in poly_dict['vertices']]
-
-    return Polygon(name=poly_dict['name'], vertices=vertices)
-
-
 def polygon_2_numpy_array(polygon: Polygon) -> np.ndarray:
     return np.array([v.position for v in polygon.vertices])
-
-
-def draw_polygon(vertices_positions: np.ndarray):
-    pyplot.fill(vertices_positions[:, 0], vertices_positions[:, 1])
-    pyplot.scatter(vertices_positions[:, 0].mean(), vertices_positions[:, 1].mean())
-
-
-def draw_points(vertices_positions: np.ndarray):
-    pyplot.scatter(vertices_positions[:, 0], vertices_positions[:, 1])
-    pyplot.draw()
-
-
-def draw_lines(lines: np.ndarray):
-    pyplot.plot(lines[:, 0], lines[:, 1])
-    pyplot.draw()
-
-
-def draw_polygons(polygon: list[np.ndarray]):
-    [draw_polygon(sorting_vertices(p)) for p in polygon]
-    pyplot.draw()
-
-
-def sorting_vertices(vertices: np.ndarray):
-    """
-    Dado um polígono convexo você pode organizar os vertices
-    pela fase entre o ponto médio do polígono com seus vértices
-    """
-    mean_x = np.mean(vertices[:, 0])
-    mean_y = np.mean(vertices[:, 1])
-    mean_point = np.array([mean_x, mean_y])
-
-    def sort_by_angle(vertex: np.ndarray) -> float:
-        vector = vertex - mean_point
-        theta = np.arctan2(vector[1], vector[0])
-        return theta if theta >= 0 else 2 * np.pi + theta
-
-    return np.array(sorted(vertices, key=sort_by_angle))
 
 
 def load_json(path_to_file: Path) -> list[Polygon]:
     with open(path_to_file, 'r') as json_file:
         polygons = json.loads(json_file.read())
 
-        return list(map(map_dict_to_polygon, polygons))
+        return list(map(Polygon.from_dict, polygons))
 
 
 def find_polynomial_path(initial_pos: np.ndarray, final_pos: np.ndarray) -> np.ndarray:
@@ -77,7 +33,7 @@ def find_polynomial_path(initial_pos: np.ndarray, final_pos: np.ndarray) -> np.n
 
     x_coefficients, y_coefficients = path_by_polynomials.find_coefficients(init, final)
     p_x, p_y, _ = path_by_polynomials.create_path_functions(x_coefficients=x_coefficients,
-                                                                  y_coefficients=y_coefficients)
+                                                            y_coefficients=y_coefficients)
 
     lamp = np.arange(0.0, 1.0, 0.001)
 
@@ -111,17 +67,20 @@ def plot_test_case_data():
         [1.5, 1.7],
         [1.5, 1.5],
     ])
-   
-    pyplot.grid()
 
-    draw_polygons([triangle, rectangle])
+    plotter = Plotter2D()
 
-    next_figure()
+    plotter.view_grid(True)
 
-    pyplot.grid()
-    draw_polygons(configuration_space.make_configuration_space(robot_vertices=triangle, obstacles_vertices=[rectangle]))
+    plotter.draw_polygons([triangle, rectangle])
+    plotter.next_figure()
 
-    pyplot.show()
+    plotter.view_grid(True)
+
+    plotter.draw_polygons(configuration_space.make_configuration_space(robot_vertices=triangle, obstacles_vertices=[rectangle]))
+
+    plotter.show()
+
 
 def plot_simulation_data():
     """
@@ -135,49 +94,65 @@ def plot_simulation_data():
     obstacles = [polygon_2_numpy_array(p) for p in polygons[:-1]]
 
     work_space_limits = np.array([
-        [-2.1824e+00, 2.1908e+00],
-        [2.1472e+00, 2.1908e+00],
-        [-2.1472e+00, -2.1908e+00],
-        [2.1472e+00, -2.1908e+00]
+        [-2.1850e+00, 2.2506e+00],
+        [2.1850e+00, 2.2506e+00],
+        [-2.1850e+00, -2.2506e+00],
+        [2.1850e+00, -2.2506e+00]
     ])
+
+ 
 
     desired_pos = np.array([-3.8350e-01, +1.3220e+00])
     initial_pos = np.array([-1.2705e+00, +4.7000e-02])
 
     path_points = find_polynomial_path(initial_pos, final_pos=desired_pos)
 
-    pyplot.grid()
+    obstacles_in_c_space = configuration_space.make_configuration_space(robot_vertices, obstacles)
 
-    draw_points(work_space_limits)
-    draw_polygons(obstacles + [robot_vertices])
-    draw_lines(path_points)
 
-    save_figure(Path('output').joinpath('work_space.pdf'))
+    x_space = np.linspace(-2.1850e+00, 2.1850e+00, 50)
+    y_space = np.linspace(-2.1850e+00, 2.1850e+00, 50)
 
-    next_figure()
+    xx, yy = np.meshgrid(x_space, y_space)
+    grid_points = list()
+    
+    # collision_detection = ConvexPolygonsCollisionDetection.from_numpy()
 
-    pyplot.grid()
-    draw_points(work_space_limits)
-    draw_polygons(configuration_space.make_configuration_space(robot_vertices, obstacles))
+    for x, y in zip(xx, yy):
+        for x_value, y_value in zip(x, y):
 
-    draw_points(np.array([[
+            grid_points.append([x_value, y_value])
+
+    grid_points = np.array(grid_points)
+
+    plotter = Plotter2D()
+
+
+    plotter.draw_points(work_space_limits)
+    plotter.draw_polygons(obstacles + [robot_vertices])
+    plotter.draw_lines(path_points)
+
+    plotter.save_figure(Path('output').joinpath('work_space.pdf'))
+
+    plotter.next_figure()
+
+    # plotter.view_grid(True)
+    plotter.draw_points(grid_points)
+
+    plotter.draw_points(work_space_limits)
+    plotter.draw_polygons(obstacles_in_c_space)
+
+    plotter.draw_points(np.array([[
         robot_vertices[:, 0].mean(),
         robot_vertices[:, 1].mean(),
     ]]))
 
-    draw_lines(path_points)
+    plotter.draw_lines(path_points)
 
-    save_figure(Path('output').joinpath('conf_space.pdf'))
+    plotter.save_figure(Path('output').joinpath('conf_space.pdf'))
 
-    pyplot.show()
+    plotter.show()
 
-
-
-def next_figure():
-    pyplot.figure(pyplot.gcf().number + 1)
-
-def save_figure(path:Path):
-    pyplot.savefig(str(path), dpi=1200)
 
 if __name__ == '__main__':
     # plot_test_case_data()

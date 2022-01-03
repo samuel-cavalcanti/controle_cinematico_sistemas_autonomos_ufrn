@@ -85,8 +85,8 @@ class AStarSearch:
 
         current_distance = self.__distances.get(target_node, float('inf'))
 
-        new_distance = origin_distance + cost
+        new_distance = origin_distance + cost + heuristic_cost
 
-        if new_distance + heuristic_cost < current_distance:
+        if new_distance < current_distance:
             self.__distances[target_node] = new_distance
             self.__came_from[target_node] = origin_node

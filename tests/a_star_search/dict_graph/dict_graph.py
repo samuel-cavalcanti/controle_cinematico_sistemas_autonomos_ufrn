@@ -26,10 +26,10 @@ class DictGraph:
 
         edge = self.__table[dict_origin.name][dict_target.name]
 
-        real_cost = edge.weight  # self.__straight_line_distance[dict_target.name]
+        real_cost = edge.weight 
 
-        return real_cost  # + heuristic_cost
+        return real_cost 
 
     def get_heuristic_cost(self, origin: Node, target: Node) -> float:
-        dict_target: DictNode = target
-        return self.__straight_line_distance[dict_target.name]
+        
+        return 0

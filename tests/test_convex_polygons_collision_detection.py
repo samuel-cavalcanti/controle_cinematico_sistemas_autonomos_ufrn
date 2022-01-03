@@ -102,6 +102,7 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
         self.assertTrue(collisions[4], "esses retangulos se tocam na face inferiror")
 
+    @unittest.skip('Not implemented, feature and maybe do not need')
     def test_collision_detection_between_polygon_and_point(self):
 
         points = [

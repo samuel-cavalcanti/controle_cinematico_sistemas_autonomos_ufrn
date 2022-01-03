@@ -1,0 +1,180 @@
+{
+    "edges":[
+        {
+            "origin": {
+                "name":"Arad"
+            },
+            "target":{
+                "name":"Zerind"
+            },
+            "weight": 75
+        },
+        {
+            "origin": {
+                "name":"Arad"
+            },
+            "target":{
+                "name":"Sibiu"
+            },
+            "weight": 140
+        },
+
+        {
+            "origin": {
+                "name":"Arad"
+            },
+            "target":{
+                "name":"Timisoara"
+            },
+            "weight": 118
+        },
+
+        {
+            "origin": {
+                "name":"Zerind"
+            },
+            "target":{
+                "name":"Oradea"
+            },
+            "weight": 71
+        },
+        {
+            "origin": {
+                "name":"Oradea"
+            },
+            "target":{
+                "name":"Sibiu"
+            },
+            "weight": 151
+        },
+        {
+            "origin": {
+                "name":"Sibiu"
+            },
+            "target":{
+                "name":"Fagaras"
+            },
+            "weight": 99
+        },
+
+        {
+            "origin": {
+                "name":"Sibiu"
+            },
+            "target":{
+                "name":"Rimnicu Vilcea"
+            },
+            "weight": 80
+        },
+
+        {
+            "origin": {
+                "name": "Rimnicu Vilcea"
+            },
+            "target":{
+                "name": "Pitesti"
+            },
+            "weight": 97
+        },
+
+        {
+            "origin": {
+                "name": "Rimnicu Vilcea"
+            },
+            "target":{
+                "name": "Craiova"
+            },
+            "weight": 146
+        },
+
+        {
+            "origin": {
+                "name": "Craiova"
+            },
+            "target":{
+                "name": "Pitesti"
+            },
+            "weight": 138
+        },
+
+        {
+            "origin": {
+                "name": "Pitesti"
+            },
+            "target":{
+                "name": "Bucharest"
+            },
+            "weight": 101
+        },
+        {
+            "origin": {
+                "name":"Fagaras"
+            },
+            "target":{
+                "name":"Bucharest"
+            },
+            "weight": 211
+        },
+
+        {
+            "origin": {
+                "name":"Timisoara"
+            },
+            "target":{
+                "name":"Lugoj"
+            },
+            "weight": 111
+        },
+
+        {
+            "origin": {
+                "name":"Lugoj"
+            },
+            "target":{
+                "name":"Mehadia"
+            },
+            "weight": 70
+        },
+
+        {
+            "origin": {
+                "name":"Mehadia"
+            },
+            "target":{
+                "name":"Dobreta"
+            },
+            "weight": 75
+        },
+
+        {
+            "origin": {
+                "name":"Dobreta"
+            },
+            "target":{
+                "name":"Craiova"
+            },
+            "weight": 120
+        }
+    ],
+
+    "straight_line_distance":{
+        "Arad": 366,
+        "Bucharest":0,
+        "Craiova":160,
+        "Dobreta":242,
+        "Fagaras":178,
+        "Lugoj":244,
+        "Mehadia":241,
+        "Oradea":380,
+        "Pitesti":98,
+        "Rimnicu Vilcea":193,
+        "Sibiu":253,
+        "Timisoara":329,
+        "Zerind":374
+    }
+
+    
+
+
+}
+   

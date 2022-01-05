@@ -1,7 +1,7 @@
 from ..utils.polygon import Polygon
 
 from .convex_polygons_collision_detection import ConvexPolygonsCollisionDetection
-from .point_lies_on_polygon import PointLiesOnPolygon
+from .point_lies_on_polygon.point_lies_on_polygon import PointLiesOnPolygon
 
 def check_detection_between_polygons(poly_a: Polygon, poly_b: Polygon) -> bool:
     """

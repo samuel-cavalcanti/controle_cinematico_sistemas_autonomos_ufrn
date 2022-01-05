@@ -16,6 +16,13 @@ class MeshGridGraph:
         self.__grid = grid
 
     def get_neighbors(self, node: Node) -> list[Node]:
+        """
+              0 0 0(i-1,j+1)
+              0 1 0
+              0 0 0
+              ---------------->
+                              i
+        """
         mesh_node: MeshNode = node
         neighbors = list()
         for i in [-1, 1]:

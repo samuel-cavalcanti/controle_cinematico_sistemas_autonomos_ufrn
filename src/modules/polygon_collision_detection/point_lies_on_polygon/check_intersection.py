@@ -9,4 +9,5 @@ class CheckInterSection:
         self.__point = point
 
 
-    def check(self,line:Line)
+    def check(self,line:Line):
+        pass

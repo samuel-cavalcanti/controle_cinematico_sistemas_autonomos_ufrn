@@ -15,6 +15,7 @@ class CheckInterSection:
     __point: Point
 
     def __init__(self, point: Point) -> None:
+        print('point: ', point)
         self.__point = point
 
     def check(self, line: Line):
@@ -33,14 +34,19 @@ class CheckInterSection:
         d = point_b[0] - point_a[0]
         c = point_a[0]*point_b[1] - point_b[0]*point_a[1]
 
-        print(f'a: {a} d: {d} c: {d}')
-
         if d == 0:
-            print(f'line is vertical: {line}')
-            return IntersectionResult(is_intersect=self.__check_intersection_case_2(x_1=point_a[0], y_1=point_a[1], y_2=point_b[1]), is_horizontal_line=False)
+            if point_a[1] > point_b[1]:
+                y_max = point_a[1]
+                y_min = point_b[1]
+            else:
+                y_max = point_b[1]
+                y_min = point_a[1]
+
+            return IntersectionResult(is_intersect=self.__check_intersection_case_2(x_1=point_a[0], y_min=y_min, y_max=y_max), is_horizontal_line=False)
 
         if a == 0:
-            return IntersectionResult(is_intersect=self.__check_intersection_case_3(x_1=point_a[0], x_2=point_b[0], y_1=point_a[1]), is_horizontal_line=True)
+            x_max = point_a[0] if point_a[0] > point_b[0] else point_b[0]
+            return IntersectionResult(is_intersect=self.__check_intersection_case_3(x_max=x_max, y_1=point_a[1]), is_horizontal_line=True)
 
         return IntersectionResult(is_intersect=self.__check_intersection_case_1(m=-a/d, b=-c/d), is_horizontal_line=False)
 
@@ -66,42 +72,42 @@ class CheckInterSection:
 
         return self.__point[0] <= x_1
 
-    def __check_intersection_case_2(self, x_1: float, y_1: float, y_2: float) -> bool:
+    def __check_intersection_case_2(self, x_1: float, y_min: float, y_max: float) -> bool:
         """
             nesse caso a reta, é uma reta vertical ou seja:
            y
             |
-        y_2 |
+      y_max |
             |         |
             |         |
         y_0 |         |     o--------->
-        y_1 |         |     |
+      y_min |         |     |
             |               |
             --------------------------->
                       x_1  x_0         x
 
-                    se y_1 <= y_0 <= y_2 então:
+                    se y_min <= y_0 <= y_max então:
                         se  x_0 >  x_1,  então uma reta a partir do x_o não intersecta
                         se  x_0 <= x_1,  então ele intersecta
         """
 
-        return y_1 <= self.__point[1] <= y_2 and self.__point[0] <= x_1
+        return y_min <= self.__point[1] <= y_max and self.__point[0] <= x_1
 
-    def __check_intersection_case_3(self, x_1: float, x_2: float, y_1: float) -> bool:
+    def __check_intersection_case_3(self,  x_max: float, y_1: float) -> bool:
         """
             Nesse caso a reta é uma reta horizontal ou seja:
 
            y
             |
-       y_1  |   -----------o----------
+       y_1  |   -----------o---------------->
             |                    
-            |                    
+            |   
             |                       
             --------------------------------------->
                x_1         x_0       x_2             x
 
-            se  o ponto "o", estiver o y = y_1 e se tiver o x, tal que, x_1 <= x <= x_2
+            se  o ponto "o", estiver o y = y_1 e se tiver o x, tal que, x <= x_2
             então, o ponto intersecta
         """
 
-        return self.__point[1] == y_1 and x_1 <= self.__point[0] <= x_2
+        return self.__point[1] == y_1 and self.__point[0] <= x_max

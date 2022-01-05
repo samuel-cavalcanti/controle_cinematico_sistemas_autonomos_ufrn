@@ -1,24 +1,22 @@
-from ...utils.polygon import Polygon
+from ...utils.polygon import Polygon, Vertex
 
-
+from .check_intersection import CheckInterSection
 
 
 Point = tuple[float, float]
 
 
-
-
 class PointLiesOnPolygon:
 
+    __checker: CheckInterSection
     __point: Point
 
-    __polygon_vertices: list[Point]
+    vertices: list[Vertex]
 
     def __init__(self, poly: Polygon, point: Point) -> None:
         self.__point = point
-        self.__polygon_vertices = [(vertex.position[0], vertex.position[1]) for vertex in poly.vertices]
-
-    
+        self.__checker = CheckInterSection(point)
+        self.vertices = poly.vertices
 
     def run(self) -> bool:
         """
@@ -52,13 +50,52 @@ class PointLiesOnPolygon:
 
 
                                     (caso especial 2)
-        caso a reta intersecte com mais de 2 lados do polígono então ele está fora do poligono
+        caso a reta horizontal esteja em "cima" de um dos lados do poligono, mas esteja fora dos limites desse lado
+        então o ponto está fora.  
 
 
                                     (caso especial 1)
-        caso a reta intersecte 2 lados, então, pode ser o caso que o ponto está fora do poligono
-        ou pode ser o caso especial 1, então se o ponto for tiver colidido com uma reta horizontal logo,
-        estamos falando do caso especial 1, portanto o ponto está dentro do poligono caso contrario está fora.
+        caso a reta horizontal esteja em "cima" de um dos lados do poligono, mas o ponto está entre os limites desse lado
+        então, o ponto está dentro do poligono.
+
+        Perceba que:
+         se a reta passar por 0 lados então, não pertence ao poligono
+         se a reta passar por 1 lado  então, pertence ao poligono
+         se a reta passar por 2 lados então, não pertence ao poligono
+
+         então, dado um lado l, se l % 2 == 1, implica que o ponto pertence ao poligono.
+
+         caso a reta passar por mais que 3 lados, então está em um dos casos especiais, ou seja,
+         verifica-se quando ocorre a interceção especial e verifica os limites.
+
+
         """
 
-        pass
+        intersection_counter = 0
+        number_of_vertices = len(self.vertices)
+
+        for i in range(number_of_vertices):
+            point_a = tuple(self.vertices[i].position)
+            point_b = tuple(self.vertices[(i+1) % number_of_vertices].position)
+            edge = (point_a, point_b)
+            result = self.__checker.check(edge)
+            if result.is_intersect:
+                if result.is_horizontal_line:
+                    return self.__on_segment(edge)
+
+                intersection_counter += 1
+
+        return intersection_counter % 2 == 1
+
+    def __on_segment(self, edge: tuple[Point, Point]) -> bool:
+        point_a = edge[0]
+        point_b = edge[1]
+
+        if point_a[0] > point_b[0]:
+            x_max = point_a[0]
+            x_min = point_b[0]
+        else:
+            x_max = point_b[0]
+            x_min = point_a[0]
+
+        return x_min <= self.__point[0] <= x_max

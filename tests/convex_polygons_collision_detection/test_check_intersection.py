@@ -23,6 +23,16 @@ class CheckIntersectionTestCase(unittest.TestCase):
         self.assertTrue(result.is_intersect, f'Line {intersect_line} should intersect')
         self.assertTrue(result.is_horizontal_line, f'Line {intersect_line} is Horizontal')
 
+        checker = CheckInterSection(point=(-1, 10))
+
+        line = ((0.0, 0.0), (10.0, 0.0))
+        result = checker.check(line)
+
+        self.assertTrue(result.is_horizontal_line, f'Line {line} is Horizontal')
+        self.assertFalse(result.is_intersect, f'Line {line} should intersect')
+
+
+
     def test_vertical_line(self):
 
         intersect_line = ((1, 0), (1, 7))

@@ -17,4 +17,4 @@ def check_detection_between_polygon_and_point(poly: Polygon, point: tuple[float,
         Retorna True se o ponto pertence ao polígono e False caso contrário
      """
 
-    PointLiesOnPolygon(poly,point).run()
+    return PointLiesOnPolygon(poly,point).run()

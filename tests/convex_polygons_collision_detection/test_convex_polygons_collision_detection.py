@@ -9,7 +9,7 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
     @staticmethod
     def __numpy_to_polygon(vertices: np.ndarray) -> Polygon:
-        return Polygon('Test', vertices=[Vertex('Test', vertex) for vertex in vertices])
+        return Polygon('Test', vertices=[Vertex('Test', position=[vertex[0], vertex[1]]) for vertex in vertices])
 
     def test_collision_detection_between_polygons(self):
         """test the separate axis theorem Collision detection"""
@@ -102,13 +102,13 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
         self.assertTrue(collisions[4], "esses retangulos se tocam na face inferiror")
 
-    @unittest.skip('Not implemented, feature and maybe do not need')
+#    @unittest.skip('Not implemented, feature and maybe do not need')
     def test_collision_detection_between_polygon_and_point(self):
 
         points = [
             (0.5, 0.0),
             (0.5, 5.0),
-            ([1.6, 1.6]),
+            (1.6, 1.6),
             (1.5, 1.5),
         ]
 
@@ -119,12 +119,12 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
           .(4) [1.5, 1.5]             .(1)  [1.7, 1.5],
         """
-        rectangle_vertices = np.array([
-            [1.7, 1.5],
-            [1.7, 1.7],
-            [1.5, 1.7],
-            [1.5, 1.5],
-        ])
+        rectangle_vertices = [
+            (1.7, 1.5),
+            (1.7, 1.7),
+            (1.5, 1.7),
+            (1.5, 1.5),
+        ]
 
         retangle = self.__numpy_to_polygon(rectangle_vertices)
 
@@ -142,7 +142,7 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
             (5, 5),
             (3, 3),
             (5, 1),
-            (8, 1),
+            (11, 1),
             (-1, 10)
         ]
 
@@ -154,12 +154,12 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
           .(4) [0.0, 0.0]             .(1)  [10.0, 0.0],
         """
 
-        another_retangle_vertices = np.array([
-            [0.0, 0.0],
-            [10.0, 0.0],
-            [10.0, 10.0],
-            [0.0, 10.0],
-        ])
+        another_retangle_vertices = [
+            (0.0, 0.0),
+            (10.0, 0.0),
+            (10.0, 10.0),
+            (0.0, 10.0),
+        ]
 
         another_retangle = self.__numpy_to_polygon(another_retangle_vertices)
 
@@ -176,5 +176,5 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
     def assert_point_polygon_collision(self, points: list[tuple[float, float]], polygon: Polygon, expected_results: list[bool]):
         for point, expected_collision in zip(points, expected_results):
-            is_collided = polygon_collision_detection.check_detection_between_polygon_and_point(poly=polygon, point=points)
-            self.assertEqual(is_collided, expected_collision, f'erro de colisão com o ponto {point}')
+            is_collided = polygon_collision_detection.check_detection_between_polygon_and_point(poly=polygon, point=point)
+            self.assertEqual(is_collided, expected_collision, f'erro de colisão com o ponto {point}, poligono: {polygon.vertices}')

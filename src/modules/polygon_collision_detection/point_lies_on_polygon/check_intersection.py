@@ -33,8 +33,11 @@ class CheckInterSection:
         d = point_b[0] - point_a[0]
         c = point_a[0]*point_b[1] - point_b[0]*point_a[1]
 
+        print(f'a: {a} d: {d} c: {d}')
+
         if d == 0:
-            return IntersectionResult(is_intersect=self.__check_intersection_case_2(x_1=point_a[0]), is_horizontal_line=False)
+            print(f'line is vertical: {line}')
+            return IntersectionResult(is_intersect=self.__check_intersection_case_2(x_1=point_a[0], y_1=point_a[1], y_2=point_b[1]), is_horizontal_line=False)
 
         if a == 0:
             return IntersectionResult(is_intersect=self.__check_intersection_case_3(x_1=point_a[0], x_2=point_b[0], y_1=point_a[1]), is_horizontal_line=True)
@@ -63,23 +66,26 @@ class CheckInterSection:
 
         return self.__point[0] <= x_1
 
-    def __check_intersection_case_2(self, x_1: float) -> bool:
+    def __check_intersection_case_2(self, x_1: float, y_1: float, y_2: float) -> bool:
         """
             nesse caso a reta, é uma reta vertical ou seja:
-
            y
+            |
+        y_2 |
             |         |
             |         |
-            |         |     o--------->
-            |         |     |
+        y_0 |         |     o--------->
+        y_1 |         |     |
+            |               |
             --------------------------->
                       x_1  x_0         x
 
-                    se  x_0 >  x_1,  então uma reta a partir do x_o não intersecta
-                    se  x_0 <= x_1,  então ele intersecta
+                    se y_1 <= y_0 <= y_2 então:
+                        se  x_0 >  x_1,  então uma reta a partir do x_o não intersecta
+                        se  x_0 <= x_1,  então ele intersecta
         """
 
-        return self.__point[0] <= x_1
+        return y_1 <= self.__point[1] <= y_2 and self.__point[0] <= x_1
 
     def __check_intersection_case_3(self, x_1: float, x_2: float, y_1: float) -> bool:
         """

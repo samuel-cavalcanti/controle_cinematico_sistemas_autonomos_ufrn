@@ -54,7 +54,7 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
                     .(4)            .(1)
         """
-        colision_rectangle_vertices = np.array([
+        collision_rectangle_vertices = np.array([
             [1.8, 1.1],
             [1.8, 1.6],
             [1.6, 1.6],
@@ -69,16 +69,16 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
               .(r_4)              .(r_1)
         """
 
-        another_colision_rectangle_vertices = np.array([
+        another_collision_rectangle_vertices = np.array([
             [2.0, 1.6],
             [2.0, 1.65],
             [1.2, 1.65],
             [1.2, 1.6],
         ])
 
-        colision_rectangle = self.__numpy_to_polygon(colision_rectangle_vertices)
+        collision_rectangle = self.__numpy_to_polygon(collision_rectangle_vertices)
 
-        another_colision_rectangle = self.__numpy_to_polygon(another_colision_rectangle_vertices)
+        another_collision_rectangle = self.__numpy_to_polygon(another_collision_rectangle_vertices)
 
         rectangle = self.__numpy_to_polygon(rectangle_vertices)
 
@@ -86,10 +86,10 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
 
         collisions = [
             polygon_collision_detection.check_detection_between_polygons(triangle, rectangle),
-            polygon_collision_detection.check_detection_between_polygons(colision_rectangle, rectangle),
-            polygon_collision_detection.check_detection_between_polygons(colision_rectangle, triangle),
-            polygon_collision_detection.check_detection_between_polygons(another_colision_rectangle, rectangle),
-            polygon_collision_detection.check_detection_between_polygons(another_colision_rectangle, colision_rectangle),
+            polygon_collision_detection.check_detection_between_polygons(collision_rectangle, rectangle),
+            polygon_collision_detection.check_detection_between_polygons(collision_rectangle, triangle),
+            polygon_collision_detection.check_detection_between_polygons(another_collision_rectangle, rectangle),
+            polygon_collision_detection.check_detection_between_polygons(another_collision_rectangle, collision_rectangle),
         ]
 
         self.assertFalse(collisions[0], "esse Triangulo e retangulo não deveriam colidir")

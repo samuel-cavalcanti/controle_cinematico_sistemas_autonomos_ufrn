@@ -135,7 +135,7 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
             True
         ]
 
-        self.assert_point_polygon_colision(points=points, polygon=retangle, expected_results=expected)
+        self.assert_point_polygon_collision(points=points, polygon=retangle, expected_results=expected)
 
         another_points = [
             (20, 20),
@@ -172,9 +172,9 @@ class ConvexPolygonsCollisionDetectionTestCase(unittest.TestCase):
             False
         ]
 
-        self.assert_point_polygon_colision(points=another_points, polygon=another_retangle, expected_results=another_expected)
+        self.assert_point_polygon_collision(points=another_points, polygon=another_retangle, expected_results=another_expected)
 
-    def assert_point_polygon_colision(self, points: list[tuple[float, float]], polygon: Polygon, expected_results: list[bool]):
+    def assert_point_polygon_collision(self, points: list[tuple[float, float]], polygon: Polygon, expected_results: list[bool]):
         for point, expected_collision in zip(points, expected_results):
             is_collided = polygon_collision_detection.check_detection_between_polygon_and_point(poly=polygon, point=points)
             self.assertEqual(is_collided, expected_collision, f'erro de colisão com o ponto {point}')

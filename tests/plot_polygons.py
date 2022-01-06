@@ -11,7 +11,8 @@ from src.modules.path_and_trajectory_planning import path_by_polynomials
 from src.modules.configuration_space import configuration_space
 from src.modules.utils.plotter_2d import Plotter2D
 from src.modules.polygon_collision_detection import polygon_collision_detection
-
+from src.modules.path_and_trajectory_planning.a_star_search import AStarSearch
+from src.modules.path_and_trajectory_planning.mesh_grid_graph import MeshGridGraph, MeshNode
 
 
 """Cuidado com o autoformat do arquivo, pode quebrar o import: from src.modules.configuration_space import configuration_space"""
@@ -56,7 +57,7 @@ def make_grid(limit_x: tuple[float, float], limit_y: tuple[float, float], obstac
         for x_value, y_value in zip(x, y):
 
             if collided_with_polygons(point=(x_value, y_value), obstacles=obstacles):
-                grid_points.append([-2.1850e+00, 2.2506e+00])
+                grid_points.append([float('inf'), float('inf')])
             else:
                 grid_points.append([x_value, y_value])
 
@@ -72,9 +73,7 @@ def collided_with_polygons(point: tuple[float, float], obstacles: list[np.ndarra
     for obstacle in obstacles:
         sorted_vertices = sorting_vertices_of_convex_polygon(obstacle)
         polygon = numpy_to_polygon(sorted_vertices)
-        is_collided = polygon_collision_detection.check_detection_between_polygon_and_point(point=point, poly=polygon)
-        if is_collided:
-            # print(f'\n point {point} polygon vertices: {[v.position for v in polygon.vertices]}\n')
+        if polygon_collision_detection.check_detection_between_polygon_and_point(point=point, poly=polygon):
             return True
 
     return False
@@ -118,13 +117,9 @@ def plot_test_case_data():
     plotter.draw_polygons([triangle, rectangle])
     plotter.next_figure()
 
-    test_v =[[-0.42, 0.91], [-0.42, 1.17], [-0.86, 1.17], [-1.36, 1.17], [-1.36, 0.83], [-1.36, 0.28], [-0.86, 0.28], [-0.54, 0.28], [-0.42, 0.36]]
-    plotter.draw_polygons([np.array(test_v)])
-    plotter.draw_points(np.array([(2.185, 2.2506)]))
-
     plotter.view_grid(True)
 
-    # plotter.draw_polygons(configuration_space.make_configuration_space(robot_vertices=triangle, obstacles_vertices=[rectangle]))
+    plotter.draw_polygons(configuration_space.make_configuration_space(robot_vertices=triangle, obstacles_vertices=[rectangle]))
 
     plotter.show()
 
@@ -159,6 +154,23 @@ def plot_simulation_data():
 
     grid = make_grid(limit_x, limit_y, obstacles_in_c_space)
 
+
+    graph = MeshGridGraph(grid)
+
+    start =  MeshNode(x_index=10, y_index=25) #MeshNode(x_index=0, y_index=0)
+    goal = MeshNode(x_index=20, y_index=39)
+
+    graph.set_goal(goal)
+
+    a_star = AStarSearch(graph)
+
+    paths = a_star.run(initial_node=start, desired_node=goal)
+
+    def mesh_node_to_point(node:MeshNode)->np.ndarray:
+        return grid[node.y_index,node.x_index]
+
+    a_star_path_points = np.array([mesh_node_to_point(node) for node in paths])
+    
     reshaped_grid = grid.reshape(-1, 2)
 
     plotter = Plotter2D()
@@ -167,12 +179,11 @@ def plot_simulation_data():
     plotter.draw_points(work_space_limits)
     plotter.draw_polygons(obstacles + [robot_vertices])
     plotter.draw_lines(path_points)
+    plotter.draw_lines(a_star_path_points)
 
-    plotter.save_figure(Path('output').joinpath('work_space.pdf'))
+    plotter.save_figure(Path('output').joinpath('work_space_with_graph.png'))
 
     plotter.next_figure()
-
-    # plotter.view_grid(True)
 
     plotter.draw_points(work_space_limits)
     plotter.draw_polygons(obstacles_in_c_space)
@@ -184,8 +195,9 @@ def plot_simulation_data():
     ]]))
 
     plotter.draw_lines(path_points)
+    plotter.draw_lines(a_star_path_points)
 
-    plotter.save_figure(Path('output').joinpath('conf_space.pdf'))
+    plotter.save_figure(Path('output').joinpath('conf_space_with_graph.png'))
 
     plotter.show()
 

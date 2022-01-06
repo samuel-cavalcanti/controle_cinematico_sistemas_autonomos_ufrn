@@ -43,6 +43,14 @@ robô seguindo o caminho planejado.
 ![](../assets/conf_space_path.png)
 
 
+## Caminho gerado pela A* no Espaço de trabalho
+
+![](../assets/work_space_with_graph.jpeg)
+
+## Caminho gerado pela A* no Espaço de Configuração
+
+![](../assert/../output/conf_space_with_graph.png)
+
 ### Referências
 
 mapeamento de obstáculos para espaço de configuração [notes on configuration space](../docs/notes_on_configuration_space.md)

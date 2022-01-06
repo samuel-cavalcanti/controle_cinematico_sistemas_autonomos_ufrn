@@ -1,7 +1,7 @@
 from ...utils.polygon import Polygon, Vertex
 
 from .check_intersection import CheckInterSection
-
+from .check_intersection import do_intersect,  orientation
 
 Point = tuple[float, float]
 
@@ -15,7 +15,6 @@ class PointLiesOnPolygon:
 
     def __init__(self, poly: Polygon, point: Point) -> None:
         self.__point = point
-        self.__checker = CheckInterSection(point)
         self.vertices = poly.vertices
 
     def run(self) -> bool:
@@ -73,18 +72,18 @@ class PointLiesOnPolygon:
 
         intersection_counter = 0
         number_of_vertices = len(self.vertices)
+        extreme = (10000, self.__point[1])
 
         for i in range(number_of_vertices):
             point_a = tuple(self.vertices[i].position)
             point_b = tuple(self.vertices[(i+1) % number_of_vertices].position)
             edge = (point_a, point_b)
-            result = self.__checker.check(edge)
-            if result.is_intersect:
-                if result.is_horizontal_line:
+            if do_intersect(current_vertice=point_a, next_vertice=point_b, extreme=extreme, point=self.__point):
+                if orientation(point_a, self.__point, point_b) == 0:
                     return self.__on_segment(edge)
-
-                intersection_counter += 1
-
+                
+                intersection_counter +=1
+           
         return intersection_counter % 2 == 1
 
     def __on_segment(self, edge: tuple[Point, Point]) -> bool:

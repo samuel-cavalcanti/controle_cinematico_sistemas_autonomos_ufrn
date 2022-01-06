@@ -50,7 +50,7 @@ def euclidean_distance(x: float, y: float) -> float:
     return np.sqrt(x ** 2 + y ** 2)
 
 
-def sorting_vertices(vertices: np.ndarray):
+def sorting_vertices_of_convex_polygon(vertices: np.ndarray):
     """
     Dado um polígono convexo você pode organizar os vertices
     pela fase entre o ponto médio do polígono com seus vértices

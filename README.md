@@ -9,6 +9,8 @@ Nessa disciplina foi realizado os seguintes projetos:
 permitam ao mesmo executar movimentos especificados em espaço
 povoado de obstáculos, sem colidir com os mesmos.  [Detalhes e Resultados do Segundo Projeto](docs/Segundo_projeto.md)
 
+- [ ] Desenvolver sistema de mapeamento para robô móvel que permita ao mesmo construir um mapa a partir de sensor de alcance, de maneira a possibilitar posteriormente a execução de movimentos especificados em um espaço de trabalho povoado de obstáculos poligonais, sem colidir com os mesmos e sem dispor de um mapa previamente fornecido pelo operador [Detalhes e Resultados do Terceiro Projeto](docs/Terceiro_projeto.md)
+
 ### Observações
 Para a execução desse projeto, foi utilizado:
 - _python_ na sua versão __3.10__

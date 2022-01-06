@@ -1,21 +1,24 @@
+import os
+import sys
+
+
+try:
+    from src.modules.path_and_trajectory_planning.mesh_grid_graph import MeshGridGraph, MeshNode
+except ModuleNotFoundError:
+    sys.path.append(os.getcwd())
+    from src.modules.path_and_trajectory_planning.mesh_grid_graph import MeshGridGraph, MeshNode
+
+
+from src.modules.path_and_trajectory_planning.a_star_search import AStarSearch
+from src.modules.polygon_collision_detection import polygon_collision_detection
+from src.modules.utils.plotter_2d import Plotter2D, RGB
+from src.modules.configuration_space import configuration_space
+from src.modules.path_and_trajectory_planning import path_by_polynomials
+from src.modules.utils.polygon import Polygon, Vertex
+from src.modules.utils import Polygon, Position, sorting_vertices_of_convex_polygon
 import json
 from pathlib import Path
 import numpy as np
-import os
-import sys
-sys.path.append(os.getcwd())
-
-from src.modules.utils import Polygon, Position, sorting_vertices_of_convex_polygon
-from src.modules.utils.polygon import Polygon, Vertex
-from src.modules.path_and_trajectory_planning import path_by_polynomials
-from src.modules.configuration_space import configuration_space
-from src.modules.utils.plotter_2d import Plotter2D
-from src.modules.polygon_collision_detection import polygon_collision_detection
-from src.modules.path_and_trajectory_planning.a_star_search import AStarSearch
-from src.modules.path_and_trajectory_planning.mesh_grid_graph import MeshGridGraph, MeshNode
-
-
-"""Cuidado com o autoformat do arquivo, pode quebrar o import: from src.modules.configuration_space import configuration_space"""
 
 
 def polygon_2_numpy_array(polygon: Polygon) -> np.ndarray:
@@ -154,10 +157,9 @@ def plot_simulation_data():
 
     grid = make_grid(limit_x, limit_y, obstacles_in_c_space)
 
-
     graph = MeshGridGraph(grid)
 
-    start =  MeshNode(x_index=10, y_index=25) #MeshNode(x_index=0, y_index=0)
+    start = MeshNode(x_index=10, y_index=25)
     goal = MeshNode(x_index=20, y_index=39)
 
     graph.set_goal(goal)
@@ -166,19 +168,20 @@ def plot_simulation_data():
 
     paths = a_star.run(initial_node=start, desired_node=goal)
 
-    def mesh_node_to_point(node:MeshNode)->np.ndarray:
-        return grid[node.y_index,node.x_index]
+    def mesh_node_to_point(node: MeshNode) -> np.ndarray:
+        return grid[node.y_index, node.x_index]
 
     a_star_path_points = np.array([mesh_node_to_point(node) for node in paths])
-    
+
     reshaped_grid = grid.reshape(-1, 2)
 
     plotter = Plotter2D()
 
-    plotter.draw_points(reshaped_grid)
     plotter.draw_points(work_space_limits)
+    plotter.draw_points(reshaped_grid, color=RGB(r=184, g=184, b=184))
     plotter.draw_polygons(obstacles + [robot_vertices])
     plotter.draw_lines(path_points)
+
     plotter.draw_lines(a_star_path_points)
 
     plotter.save_figure(Path('output').joinpath('work_space_with_graph.png'))
@@ -187,7 +190,7 @@ def plot_simulation_data():
 
     plotter.draw_points(work_space_limits)
     plotter.draw_polygons(obstacles_in_c_space)
-    plotter.draw_points(reshaped_grid)
+    plotter.draw_points(reshaped_grid, color=RGB(r=184, g=184, b=184))
 
     plotter.draw_points(np.array([[
         robot_vertices[:, 0].mean(),

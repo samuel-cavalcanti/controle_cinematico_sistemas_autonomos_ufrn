@@ -31,6 +31,8 @@ de simulação (trajetória gerada, trajetória seguida, gráficos das
 variáveis de entrada e saída em função do tempo, etc.).
 
 
+[__Relatório__](Relatorio_Seminario_Sistemas_Roboticos_primeiro_projeto.pdf)
+
 ### Testes
 
 [Gráficos do gerador de caminhos](gerador_de_caminhos_plot.md)

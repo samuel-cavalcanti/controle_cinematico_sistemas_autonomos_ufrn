@@ -6,7 +6,7 @@ from pathlib import Path
 from modules.coppeliasim import coppeliasim
 from modules.utils import Polygon, Vertex
 
-NUMBER_OF_ROBOT_VERTICES = 4
+NUMBER_OF_ROBOT_VERTICES = 8
 
 
 def main():

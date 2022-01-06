@@ -1,12 +1,22 @@
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 import numpy as np
 from matplotlib import pyplot
+
+
+@dataclass
+class RGB:
+    """Onde r,g,b varia de 0 até 255"""
+    r: int
+    g: int
+    b: int
 
 
 class Plotter2D:
 
     @staticmethod
-    def draw_points(vertices_positions: np.ndarray):
+    def draw_points(vertices_positions: np.ndarray, color: Optional[RGB] = None):
         """ Espera um vetor v no seguinte formato:
             v = [
                 [x,y],
@@ -15,7 +25,11 @@ class Plotter2D:
                  ...
             ]
         """
-        pyplot.scatter(vertices_positions[:, 0], vertices_positions[:, 1])
+       
+        if color:
+            color = np.array([color.r, color.g, color.b])/255
+       
+        pyplot.scatter(vertices_positions[:, 0], vertices_positions[:, 1], color=color)
         pyplot.draw()
 
     def draw_polygons(self, polygon: list[np.ndarray]):
@@ -65,8 +79,8 @@ class Plotter2D:
 
     @staticmethod
     def save_figure(path: Path):
-        figure = pyplot.gcf()
-        figure.set_size_inches(18, 16)
+        # figure = pyplot.gcf()
+        # figure.set_size_inches(18, 16)
         pyplot.savefig(str(path), dpi=1200)
 
     @staticmethod

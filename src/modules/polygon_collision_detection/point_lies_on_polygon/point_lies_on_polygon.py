@@ -1,14 +1,12 @@
 from ...utils.polygon import Polygon, Vertex
 
-from .check_intersection import CheckInterSection
+# from .check_intersection import CheckInterSection
 from .check_intersection import do_intersect,  orientation
 
 Point = tuple[float, float]
 
 
 class PointLiesOnPolygon:
-
-    __checker: CheckInterSection
     __point: Point
 
     vertices: list[Vertex]

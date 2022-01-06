@@ -65,6 +65,8 @@ class Plotter2D:
 
     @staticmethod
     def save_figure(path: Path):
+        figure = pyplot.gcf()
+        figure.set_size_inches(18, 16)
         pyplot.savefig(str(path), dpi=1200)
 
     @staticmethod

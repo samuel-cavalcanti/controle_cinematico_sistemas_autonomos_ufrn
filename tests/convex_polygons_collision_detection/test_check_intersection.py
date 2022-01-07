@@ -13,23 +13,21 @@ class CheckIntersectionTestCase(unittest.TestCase):
 
         intersect_line = ((0.0, 0.5), (0.5, 0.5))
 
-        result = self.check_intersection.check(not_intersect_line)
+        result = self.check_intersection.do_intersect(not_intersect_line)
 
-        self.assertFalse(result.is_intersect, f'Line {intersect_line} should not intersect')
-        self.assertTrue(result.is_horizontal_line, f'Line {not_intersect_line} is Horizontal')
+        self.assertFalse(result, f'Line {intersect_line} should not intersect')
+        
+        result = self.check_intersection.do_intersect(intersect_line)
 
-        result = self.check_intersection.check(intersect_line)
-
-        self.assertTrue(result.is_intersect, f'Line {intersect_line} should intersect')
-        self.assertTrue(result.is_horizontal_line, f'Line {intersect_line} is Horizontal')
+        self.assertTrue(result, f'Line {intersect_line} should intersect')
+      
 
         checker = CheckInterSection(point=(-1, 10))
 
         line = ((0.0, 0.0), (10.0, 0.0))
-        result = checker.check(line)
+        result = checker.do_intersect(line)
 
-        self.assertTrue(result.is_horizontal_line, f'Line {line} is Horizontal')
-        self.assertFalse(result.is_intersect, f'Line {line} should intersect')
+        self.assertFalse(result, f'Line {line} should intersect')
 
 
 
@@ -37,30 +35,27 @@ class CheckIntersectionTestCase(unittest.TestCase):
 
         intersect_line = ((1, 0), (1, 7))
 
-        result = self.check_intersection.check(intersect_line)
+        result = self.check_intersection.do_intersect(intersect_line)
 
-        self.assertTrue(result.is_intersect, f'Line {intersect_line} should intersect')
-        self.assertFalse(result.is_horizontal_line, f'Line {intersect_line} is not Horizontal')
-
+        self.assertTrue(result, f'Line {intersect_line} should intersect')
+      
         not_intersect_line = ((0.5, 1.5), (0.5, 2.5))
 
-        result = self.check_intersection.check(not_intersect_line)
+        result = self.check_intersection.do_intersect(not_intersect_line)
 
-        self.assertFalse(result.is_intersect, f'Line {not_intersect_line} should not intersect')
-        self.assertFalse(result.is_horizontal_line, f'Line {not_intersect_line} is not Horizontal')
-
+        self.assertFalse(result, f'Line {not_intersect_line} should not intersect')
+      
     def test_diagonal_line(self):
 
         intersect_line = ((0.0, 0.0), (2.0, 2.0))
 
-        result = self.check_intersection.check(intersect_line)
+        result = self.check_intersection.do_intersect(intersect_line)
 
-        self.assertTrue(result.is_intersect, f'Line {intersect_line} should intersect')
-        self.assertFalse(result.is_horizontal_line, f'Line {intersect_line} is not Horizontal')
-
+        self.assertTrue(result, f'Line {intersect_line} should intersect')
+        
         not_intersect_line = ((0.0, 0.0), (2.5, 3.5))
 
-        result = self.check_intersection.check(not_intersect_line)
+        result = self.check_intersection.do_intersect(not_intersect_line)
 
-        self.assertFalse(result.is_intersect, f'Line {not_intersect_line} should not intersect')
-        self.assertFalse(result.is_horizontal_line, f'Line {not_intersect_line} is not Horizontal')
+        self.assertFalse(result, f'Line {not_intersect_line} should not intersect')
+      

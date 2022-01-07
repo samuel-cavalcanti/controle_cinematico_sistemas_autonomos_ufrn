@@ -3,13 +3,13 @@ import sys
 
 
 try:
-    from src.modules.path_and_trajectory_planning.mesh_grid_graph import MeshGridGraph, MeshNode
+    from src.modules.path_and_trajectory_planning.graph_algorithms.mesh_grid_graph import MeshGridGraph, MeshNode
 except ModuleNotFoundError:
     sys.path.append(os.getcwd())
-    from src.modules.path_and_trajectory_planning.mesh_grid_graph import MeshGridGraph, MeshNode
+    from src.modules.path_and_trajectory_planning.graph_algorithms.mesh_grid_graph import MeshGridGraph, MeshNode
 
 
-from src.modules.path_and_trajectory_planning.a_star_search import AStarSearch
+from src.modules.path_and_trajectory_planning.graph_algorithms.a_star_search import AStarSearch
 from src.modules.polygon_collision_detection import polygon_collision_detection
 from src.modules.utils.plotter_2d import Plotter2D, RGB
 from src.modules.configuration_space import configuration_space
@@ -184,7 +184,7 @@ def plot_simulation_data():
 
     plotter.draw_lines(a_star_path_points)
 
-    plotter.save_figure(Path('output').joinpath('work_space_with_graph.png'))
+    plotter.save_figure(Path('output').joinpath('work_space_with_graph.pdf'))
 
     plotter.next_figure()
 
@@ -200,7 +200,7 @@ def plot_simulation_data():
     plotter.draw_lines(path_points)
     plotter.draw_lines(a_star_path_points)
 
-    plotter.save_figure(Path('output').joinpath('conf_space_with_graph.png'))
+    plotter.save_figure(Path('output').joinpath('conf_space_with_graph.pdf'))
 
     plotter.show()
 

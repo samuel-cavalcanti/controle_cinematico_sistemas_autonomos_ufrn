@@ -1,4 +1,4 @@
-from src.modules.path_and_trajectory_planning.a_star_search import Node
+from src.modules.path_and_trajectory_planning.graph_algorithms.a_star_search import Node
 from .dict_edge import DictEdge
 from .dict_node import DictNode
 

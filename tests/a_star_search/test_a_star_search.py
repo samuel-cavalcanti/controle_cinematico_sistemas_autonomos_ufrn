@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 from .json_graph_wrapper import JsonGraphWrapper
-from src.modules.path_and_trajectory_planning.a_star_search import Graph, AStarSearch
+from src.modules.path_and_trajectory_planning.graph_algorithms.a_star_search import Graph, AStarSearch
 from .dict_graph import DictNode
 
 

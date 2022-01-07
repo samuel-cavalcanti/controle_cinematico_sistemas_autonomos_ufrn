@@ -1,11 +1,11 @@
-from ...utils.polygon import Polygon
+from ....utils.polygon import Polygon
 from .grid_limits import GridLimits
 
 from ..a_star_search import Graph
 from .mesh_grid_graph import MeshGridGraph
 
 import numpy as np
-from ... import polygon_collision_detection
+from .... import polygon_collision_detection
 
 
 class MeshGridGraphBuilder:

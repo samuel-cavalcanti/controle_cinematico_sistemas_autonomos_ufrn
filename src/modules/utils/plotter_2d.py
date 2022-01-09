@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
+from matplotlib.colors import Colormap
 import numpy as np
 from matplotlib import pyplot
-
+from matplotlib import transforms
 
 @dataclass
 class RGB:
@@ -15,8 +16,10 @@ class RGB:
 
 class Plotter2D:
 
-    @staticmethod
-    def draw_points(vertices_positions: np.ndarray, color: Optional[RGB] = None):
+    def __rgb_to_normalized_array(self,color: RGB) -> np.ndarray:
+        return np.array([color.r, color.g, color.b])/255
+
+    def draw_points(self, vertices_positions: np.ndarray, color: Optional[RGB] = None):
         """ Espera um vetor v no seguinte formato:
             v = [
                 [x,y],
@@ -25,10 +28,10 @@ class Plotter2D:
                  ...
             ]
         """
-       
+
         if color:
-            color = np.array([color.r, color.g, color.b])/255
-       
+            color = self.__rgb_to_normalized_array(color)
+
         pyplot.scatter(vertices_positions[:, 0], vertices_positions[:, 1], color=color)
         pyplot.draw()
 
@@ -58,18 +61,19 @@ class Plotter2D:
         """Cria uma nova folha para exibir outro gráfico"""
         pyplot.figure(pyplot.gcf().number + 1)
 
-    @staticmethod
-    def __draw_polygon(vertices_positions: np.ndarray):
+    
+    def __draw_polygon(self,vertices_positions: np.ndarray):
         pyplot.fill(vertices_positions[:, 0], vertices_positions[:, 1])
         pyplot.scatter(vertices_positions[:, 0].mean(), vertices_positions[:, 1].mean())
 
-    @staticmethod
-    def draw_lines(lines: np.ndarray):
+    def draw_lines(self,lines: np.ndarray, color: Optional[RGB] = None):
         """Desenha uma linha seguida da outra
             line[0]: (x1,y1) .......................(x2,y2)
             line[1]:                                (x2,y2) ............................(x3,y3)
         """
-        pyplot.plot(lines[:, 0], lines[:, 1])
+        if color:
+            color = self.__rgb_to_normalized_array(color)
+        pyplot.plot(lines[:, 0], lines[:, 1],color=color)
         pyplot.draw()
 
     @staticmethod
@@ -92,3 +96,8 @@ class Plotter2D:
     def show():
         """cria uma janela para cada gráfico desenhado e segura o processo até fechar as janelas"""
         pyplot.show()
+
+    def draw_potential_field(self,field:np.ndarray):
+        """Espera-se uma imagem em r,g,b ou em tom de cinza,
+        """
+        pyplot.pcolor(field,vmax=5,vmin=0)

@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-from src.modules.path_and_trajectory_planning.graph_algorithms.a_star_search.graph import Graph
+from modules.path_and_trajectory_planning.graph_algorithms.a_star_search.graph import Graph
 
 from .dict_graph import DictGraph, DictEdge
 

@@ -10,12 +10,15 @@ except ModuleNotFoundError:
 
 
 from src.modules.path_and_trajectory_planning.graph_algorithms.a_star_search import AStarSearch
+from src.modules.path_and_trajectory_planning.graph_algorithms.configuration_space_a_star_parameters import ConfigurationSpaceAStarParameters
 from src.modules.polygon_collision_detection import polygon_collision_detection
 from src.modules.utils.plotter_2d import Plotter2D, RGB
 from src.modules.configuration_space import configuration_space
 from src.modules.path_and_trajectory_planning import path_by_polynomials
 from src.modules.utils.polygon import Polygon, Vertex
 from src.modules.utils import Polygon, Position, sorting_vertices_of_convex_polygon
+from src.modules.utils.grid import GridLimits,ConfigurationSpaceGrid
+
 import json
 from pathlib import Path
 import numpy as np
@@ -48,21 +51,26 @@ def find_polynomial_path(initial_pos: np.ndarray, final_pos: np.ndarray) -> np.n
     return np.array([[x, y] for x, y in zip(sample_x, sample_y)])
 
 
-def make_grid(limit_x: tuple[float, float], limit_y: tuple[float, float], obstacles: list[np.ndarray]) -> np.ndarray:
-    x_space = np.linspace(limit_x[0], limit_x[1], 50)
-    y_space = np.linspace(limit_y[0], limit_y[1], 50)
+def make_grid(limits:GridLimits, obstacles: list[np.ndarray]) -> np.ndarray:
 
-    xx, yy = np.meshgrid(x_space, y_space)
+    grid_width_x = int(round(( limits.x_max - limits.x_min) /limits.resolution))
+    grid_width_y = int(round((limits.y_max - limits.y_min) / limits.resolution))
 
+    x_space = np.linspace(limits.x_min, limits.x_max, grid_width_x)
+    y_space = np.linspace(limits.y_min, limits.y_max, grid_width_y)
+
+    # xx, yy = np.meshgrid(x_space, y_space)
     grid_points = list()
 
-    for x, y in zip(xx, yy):
-        for x_value, y_value in zip(x, y):
 
+    for x_value in x_space:
+        for y_value in y_space:
             if collided_with_polygons(point=(x_value, y_value), obstacles=obstacles):
                 grid_points.append([float('inf'), float('inf')])
             else:
                 grid_points.append([x_value, y_value])
+
+   
 
     grid_points = np.array(grid_points)
 
@@ -152,37 +160,52 @@ def plot_simulation_data():
 
     obstacles_in_c_space = configuration_space.make_configuration_space(robot_vertices, obstacles)
 
-    limit_x = (-2.1850e+00, 2.1850e+00)
-    limit_y = (-2.2506e+00, 2.2506e+00)
+    grid_limits = GridLimits(x_min=-2.1850e+00,x_max=2.1850e+00,y_min=-2.2506e+00,y_max=2.2506e+00,resolution=0.087)
 
-    grid = make_grid(limit_x, limit_y, obstacles_in_c_space)
+    grid = make_grid(grid_limits, obstacles_in_c_space)
 
-    graph = MeshGridGraph(grid)
+    n_grid = ConfigurationSpaceGrid(grid_limits,c_space_obstacles=obstacles_in_c_space)
 
-    start = MeshNode(x_index=10, y_index=25)
-    goal = MeshNode(x_index=20, y_index=39)
+    graph = MeshGridGraph(n_grid)
 
-    graph.set_goal(goal)
+    a_star_params = ConfigurationSpaceAStarParameters(n_grid)
 
-    a_star = AStarSearch(graph)
+    
+    start = MeshNode(x_index=10, y_index=26)
+    goal = MeshNode(x_index=20, y_index=42)
 
-    paths = a_star.run(initial_node=start, desired_node=goal)
+    a_star_params.set_goal(goal)
+
+    a_star = AStarSearch(graph,params=a_star_params)
+
+    path = a_star.run(initial_node=start, desired_node=goal)
 
     def mesh_node_to_point(node: MeshNode) -> np.ndarray:
-        return grid[node.y_index, node.x_index]
+        return n_grid.get(x=node.x_index,y=node.y_index)
 
-    a_star_path_points = np.array([mesh_node_to_point(node) for node in paths])
+    a_star_path_points = np.array([mesh_node_to_point(node) for node in path])
 
+    print(f'goal real value: {mesh_node_to_point(goal)}')
+
+    print(f'start real value: {mesh_node_to_point(start)}')
+
+
+    np.savetxt(Path('output').joinpath('a_star__c_space.csv'),a_star_path_points,delimiter=',')
+   
     reshaped_grid = grid.reshape(-1, 2)
 
     plotter = Plotter2D()
 
     plotter.draw_points(work_space_limits)
+    plotter.draw_polygons(obstacles)
     plotter.draw_points(reshaped_grid, color=RGB(r=184, g=184, b=184))
-    plotter.draw_polygons(obstacles + [robot_vertices])
+    plotter.draw_polygons([robot_vertices])
     plotter.draw_lines(path_points)
-
-    plotter.draw_lines(a_star_path_points)
+    if len(a_star_path_points) != 0:
+        plotter.draw_lines(a_star_path_points,RGB(0,255,255))
+    else:
+        print('A estrela não achou o caminho !!')
+    plotter.draw_points(np.array([mesh_node_to_point(goal)]),color=RGB(r=0,b=0,g=0))
 
     plotter.save_figure(Path('output').joinpath('work_space_with_graph.pdf'))
 
@@ -198,7 +221,10 @@ def plot_simulation_data():
     ]]))
 
     plotter.draw_lines(path_points)
-    plotter.draw_lines(a_star_path_points)
+    if len(a_star_path_points) != 0:
+       plotter.draw_lines(a_star_path_points,RGB(0,255,255))
+    else:
+        print('A estrela não achou o caminho !!')
 
     plotter.save_figure(Path('output').joinpath('conf_space_with_graph.pdf'))
 

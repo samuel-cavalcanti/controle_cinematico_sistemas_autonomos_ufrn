@@ -1,5 +1,5 @@
 from ....utils.polygon import Polygon
-from .grid_limits import GridLimits
+from ....utils.grid.grid_limits import GridLimits
 
 from ..a_star_search import Graph
 from .mesh_grid_graph import MeshGridGraph
@@ -23,8 +23,8 @@ class MeshGridGraphBuilder:
         return MeshGridGraph(grid)
 
     def __make_grid(self) -> np.ndarray:
-        x_space = np.linspace(self.__limits.x_limits[0], self.__limits.x_limits[1], 50)
-        y_space = np.linspace(self.__limits.y_limits[0], self.__limits.y_limits[1], 50)
+        x_space = np.linspace(self.__limits.x_min, self.__limits.x_max, 50)
+        y_space = np.linspace(self.__limits.y_min, self.__limits.y_max, 50)
 
         xx, yy = np.meshgrid(x_space, y_space)
 

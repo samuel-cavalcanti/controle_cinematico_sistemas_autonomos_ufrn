@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from typing import Optional
 from .node import Node
 import heapq
 
@@ -24,9 +25,12 @@ class MinHeap:
     def push(self, node: Node,distance:float):
         heapq.heappush(self.__list, HeapItem(node=node, distance=distance))
 
-    def pop(self) -> Node:
-        item = heapq.heappop(self.__list)
-        return item.node
+    def pop(self) -> Optional[Node]:
+        try:
+            item = heapq.heappop(self.__list)
+            return item.node
+        except IndexError:
+          return None
 
     def is_not_empty(self)->bool:
         return len(self.__list) != 0

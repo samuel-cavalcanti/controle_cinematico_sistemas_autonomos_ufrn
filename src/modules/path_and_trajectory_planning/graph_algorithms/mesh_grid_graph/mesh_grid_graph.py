@@ -1,58 +1,48 @@
 from typing import Optional
 from .mesh_node import MeshNode
 from ..a_star_search import Node
+from ....utils.grid import Grid
+
 
 import numpy as np
 
 
 class MeshGridGraph:
+    """
+        Grafo formado por uma malha 2D
+    """
 
-    __grid: np.ndarray
-    __goal_node: Optional[MeshNode]
+    __grid: Grid
+    __motion = [(1, 0),
+                (0, 1),
+                (-1, 0),
+                (0, -1),
+                (-1, -1),
+                (-1, 1),
+                (1, -1),
+                (1, 1)]
 
-    def __init__(self, grid: np.ndarray) -> None:
-        assert grid.shape[-1] == 2, "expected and grid with last shape is x,y pos"
-        assert len(grid.shape) == 3, "expected an grid 3D shape"
+    def __init__(self, grid: Grid) -> None:
         self.__grid = grid
-        self.__goal_node = None
-
-    def set_goal(self, node: MeshNode):
-        self.__goal_node = node
 
     def get_neighbors(self, node: Node) -> list[Node]:
         mesh_node: MeshNode = node
         neighbors = list()
-        for i in [-1, 0, 1]:
-            for j in [-1, 0, 1]:
-                index = (mesh_node.x_index + i, mesh_node.y_index + j)
-                if (i, j) == (0, 0):
-                    continue
-                if not self.__out_of_bounds(index):
-                    value = self.__grid[index[1], index[0]]
-                    if value[0] != float('inf'):
-                        neighbors.append(MeshNode(x_index=index[0], y_index=index[1]))
+        for i, j in self.__motion:
+            index = (mesh_node.x_index + i, mesh_node.y_index + j)
+            if self.__grid.is_valid_index(x=index[0], y=index[1]):
+                neighbors.append(MeshNode(x_index=index[0], y_index=index[1]))
 
         return neighbors
 
-    def get_real_cost(self, origin: Node, target: Node) -> float:
-        origin_mesh_node: MeshNode = origin
-        target_mesh_node: MeshNode = target
-        pos_origin = self.__grid[origin_mesh_node.y_index][origin_mesh_node.x_index]
-        pos_target = self.__grid[target_mesh_node.y_index][target_mesh_node.x_index]
+    def __is_valid_index(self, index: tuple[int, int], i: int, j: int) -> bool:
 
-        return np.linalg.norm(pos_origin - pos_target)
-
-    def get_heuristic_cost(self, origin: Node, target: Node) -> float:
-
-        if self.__goal_node is None:
-            return 0.0
-
-        return self.get_real_cost(target, self.__goal_node)
-
-    def __out_of_bounds(self, index: tuple[int, int]) -> bool:
-
-        try:
-            self.__grid[index[1], index[0]]
+        if index[0] < 0 or index[1] < 0:
             return False
+        try:
+            self.__grid.get(x=index[0], y=index[1])
+            if self.__grid.is_valid_index(index[0], index[1]):
+                return True
+
         except IndexError:
-            return True
+            return False

@@ -175,14 +175,7 @@ def real_pos_to_index(real_pos: Position, field_limits: GridLimits) -> tuple[int
     return index_x, index_y
 
 
-def calculate_robot_radius(robot_vertices: np.ndarray) -> float:
-    robot_center = (robot_vertices[:, 0].mean(), robot_vertices[:, 1].mean())
-    max_distance = -1
-    for vertex in robot_vertices:
-        distance = np.hypot(robot_center[0] - vertex[0], robot_center[1] - vertex[1])
-        if distance > max_distance:
-            max_distance = distance
-    return max_distance
+
 
 
 def make_points_grid(limits: GridLimits) -> np.ndarray:
@@ -221,7 +214,7 @@ def main():
 
     grid_limits = GridLimits(x_min=-2.1850e+00, x_max=2.1850e+00, y_min=-2.2506e+00, y_max=2.2506e+00, resolution=0.087)
 
-    calculator = PotentialFieldCalculator(polygons[:-1], goal_real_position, robot_radius=calculate_robot_radius(robot_vertices))
+    calculator = PotentialFieldCalculator(polygons[:-1], goal_real_position, robot=robot)
     potencial_field_grid = make_potencial_field_grid(limits=grid_limits, calculator=calculator)
 
     points_grid = make_points_grid(grid_limits)

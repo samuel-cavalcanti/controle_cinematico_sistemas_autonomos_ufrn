@@ -33,6 +33,7 @@ calculada. Implementar controlador que permita ao robô seguir
 o caminho planejado. Entregar relatório e vídeo mostrando o
 robô seguindo o caminho planejado.
 
+[Relatório Segundo Projeto](Relatorio_segundo_projeto_sistemas_roboticos_autonomos.pdf)
 
 ### Testes
 

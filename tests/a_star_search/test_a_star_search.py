@@ -17,7 +17,7 @@ class AStarSearchTestCase(unittest.TestCase):
 
         bucharest = DictNode(name='Bucharest')
 
-        a_star = AStarSearch(graph)
+        a_star = AStarSearch(graph,graph)
 
         path: list[DictNode] = a_star.run(initial_node=arad, desired_node=bucharest)
 

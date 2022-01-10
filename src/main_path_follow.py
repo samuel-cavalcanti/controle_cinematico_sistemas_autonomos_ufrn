@@ -1,31 +1,30 @@
 import time
 from pathlib import Path
-
+import numpy as np
 from modules import utils, coppeliasim, controllers
-from modules.path_and_trajectory_planning import TrajectoryFollow
-from modules.path_and_trajectory_planning import path_by_polynomials
+from modules.path_and_trajectory_planning.path_follow import PathFollow
 from modules.utils import Position, PID, SimulationCSVRecorder
+import sys
 
+def draw_path(client_id: int, path: np.ndarray):
 
-def draw_path(client_id: int, initial_pos: Position, final_pos: Position):
-    x_coefficients, y_coefficients = path_by_polynomials.find_coefficients(
-        initial_pos, final_pos)
-    p_x, p_y, theta_t = path_by_polynomials.create_path_functions(
-        x_coefficients, y_coefficients)
-
-    path_points = path_by_polynomials.path_points_generator(p_x, p_y)
+    path_points = list()
+    for point in path:
+        path_points.append(point[0])
+        path_points.append(point[1])
+        path_points.append(0.05)
 
     coppeliasim.send_path_4_drawing(path_points, client_id)
 
 
 def create_federico_controller() -> controllers.FredericoController:
-    k_p = 1.5145
+    k_p = 0.5145
     k_i = k_p / 2.9079
     k_d = k_p * 0.085
     """Constantes Kp Ki Kd retiradas da tese de Federico"""
     pid_position = PID(k_p, k_i, k_d, set_point=0)
     k_p = 0.7
-    k_d = k_p * 0.0474
+    k_d = k_p * 0.0174
     k_i = 0.15
     pid_orientation = PID(k_p, k_d, k_i, set_point=0)
     controller = controllers.FredericoController(position_controller=pid_position,
@@ -34,7 +33,17 @@ def create_federico_controller() -> controllers.FredericoController:
     return controller
 
 
+def load_path_from_csv_file(csv_file: Path) -> np.ndarray:
+    return np.loadtxt(csv_file, delimiter=',')
+
+
 def main():
+    command_line_chooses= {'p_space':'a_star_potential_field_path','c_space':'a_star__c_space'}
+    file_name = command_line_chooses.get(sys.argv[1],command_line_chooses['p_space']) 
+    path = load_path_from_csv_file(Path('assets').joinpath(f'{file_name}.csv'))
+
+    path_follow = PathFollow(path)
+
     client_id = coppeliasim.try_to_connect_to_coppeliasim(port=19999)
 
     left_motor, right_motor = coppeliasim.get_motors(client_id)
@@ -56,15 +65,9 @@ def main():
                
     '''
 
-    initial = Position(x=-1.2945, y=0.050001, theta_in_rads=0)
-    final = Position(1.9, 2.1, utils.deg2rad(90))
     initial_time = time.time()
     current_time = time.time() - initial_time
-    max_time_in_seconds = 5.0
-    trajectory_follow = TrajectoryFollow(initial_pos=initial,
-                                   desired_pos=final,
-                                   initial_time_in_seconds=current_time,
-                                   max_time=max_time_in_seconds)
+  
 
     simulation_sample_header = ['linear_velocity_x',
                                 'linear_velocity_y',
@@ -82,7 +85,7 @@ def main():
 
     controller = create_federico_controller()
 
-    draw_path(client_id, initial_pos=initial, final_pos=final)
+    draw_path(client_id, path=path)
 
     while coppeliasim.simulation_is_alive(client_id):
         current_time = time.time() - initial_time
@@ -95,6 +98,7 @@ def main():
 
         if not velocity or not position or not euler_angles_in_rads:
             continue
+        
 
         current_pos = Position(
             x=position[0],
@@ -103,7 +107,7 @@ def main():
 
         linear_velocity, angular_velocity = velocity
 
-        desired_pos = trajectory_follow.step(current_time)
+        desired_pos = path_follow.step(current_pos)
 
         pioneer_velocity = controller.step(current_pos, desired_pos)
 
@@ -120,9 +124,9 @@ def main():
 
         simulation_recorder.add_sample(current_sample)
 
-        if current_time > max_time_in_seconds:
-            coppeliasim.set_motor_velocity(client_id, left_motor, 0.0)
-            coppeliasim.set_motor_velocity(client_id, right_motor, 0.0)
+        if path_follow.is_ended():
+            coppeliasim.set_motor_velocity(client_id, left_motor, 0)
+            coppeliasim.set_motor_velocity(client_id, right_motor, 0)
             break
 
         coppeliasim.set_motor_velocity(
@@ -132,7 +136,7 @@ def main():
         coppeliasim.set_object_position(
             client_id, target, [desired_pos.x, desired_pos.y, +2.3879e-01])
 
-    simulation_recorder.save(Path('output').joinpath('main_trajectory_follow.csv'))
+    simulation_recorder.save(Path('output').joinpath(f'main_path_follow_{file_name}.csv'))
 
 
 if __name__ == '__main__':

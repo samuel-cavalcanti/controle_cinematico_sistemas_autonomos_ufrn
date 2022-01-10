@@ -50,6 +50,13 @@ robô seguindo o caminho planejado.
 ## Caminho gerado pela A* no Espaço de Configuração
 
 ![](../assets/conf_space_with_graph.jpeg)
+
+## Controlador Federico Seguindo Caminho gerado pela A* no Espaço de Trabalho
+[![Controlador Federico Seguindo Caminho gerado pela A* no Espaço de Trabalho](https://img.youtube.com/vi/MZlBS-d6O-Y/maxresdefault.jpg)](https://youtu.be/MZlBS-d6O-Y)
+
+## Controlador Federico Seguindo Caminho gerado pela A* no Campo Potencial Artificial 
+[![Controlador Federico Seguindo Caminho gerado pela A* no Espaço de Trabalho](https://img.youtube.com/vi/jtnPh2pygI4/maxresdefault.jpg)](https://youtu.be/jtnPh2pygI4)
+
 ### Referências
 
 mapeamento de obstáculos para espaço de configuração [notes on configuration space](../docs/notes_on_configuration_space.md)

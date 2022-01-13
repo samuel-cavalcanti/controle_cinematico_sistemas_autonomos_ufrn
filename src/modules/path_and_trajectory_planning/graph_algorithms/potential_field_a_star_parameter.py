@@ -22,7 +22,7 @@ class PotencialFieldAStarParameter:
         node: MeshNode = target
 
        
-        return  0#self.__field_calculator.calculate_potencial_value(target_pos)
+        return  0
 
 
     def __node_to_position(self,node:MeshNode)->np.ndarray:

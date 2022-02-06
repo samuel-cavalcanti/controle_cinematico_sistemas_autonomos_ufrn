@@ -3,6 +3,17 @@ import csv
 
 
 class SimulationCSVRecorder:
+    """Gavador de amostradas da simulação, ele salva as amostradas no formado csv com um header
+    csv === comma separated value
+    geralmente busca-se salvar esses arquivos também com o nome .csv, mas não é obrigatório.
+
+    Um header ou cabeçalho do arquivo é a primeira linha do arquivo, que contem os nomes da coluna. Um exemplo de arquivo csv:
+
+    posição x do robô, posição y do robô, orientação do robô, sensor 1, sensor 2
+    10,20,0,1,1
+    12,20,0,1,1
+    14,20,0,0.5,1
+    """
     __headers: list[str]
     __samples: list[list[float]]
 

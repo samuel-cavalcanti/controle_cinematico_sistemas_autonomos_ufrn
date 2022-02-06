@@ -32,3 +32,9 @@ meta 2. Executar testes para diferentes configurações de
 obstáculos. Entregar relatório e vídeo apresentando o
 funcionamento do sistema.
 
+### Testes
+
+o Robô pioneer p3dx já é coberto de sonars e já vem com o algoritmo  que desvia de obstáculo: braitenberg
+
+### Coleta de dados para realizar o mapa
+[![Controlador Federico Seguindo Caminho gerado pela A* no Espaço de Trabalho](https://img.youtube.com/vi/z2wgVdeFAFk/maxresdefault.jpg)](https://youtu.be/z2wgVdeFAFk)

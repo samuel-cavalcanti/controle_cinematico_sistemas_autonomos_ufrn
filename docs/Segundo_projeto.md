@@ -38,19 +38,19 @@ robô seguindo o caminho planejado.
 ### Testes
 
 ## Caminho no espaço de trabalho
-![](../assets/work_space_path.png)
+![](../assets/images/segundo_projeto/work_space_path.png)
 
 ## Caminho no espaço de Configuração
-![](../assets/conf_space_path.png)
+![](../assets/images/segundo_projeto/conf_space_path.png)
 
 
 ## Caminho gerado pela A* no Espaço de trabalho
 
-![](../assets/work_space_with_graph.jpeg)
+![](../assets/images/segundo_projeto/work_space_with_graph.jpeg)
 
 ## Caminho gerado pela A* no Espaço de Configuração
 
-![](../assets/conf_space_with_graph.jpeg)
+![](../assets/images/segundo_projeto/conf_space_with_graph.jpeg)
 
 ## Controlador Federico Seguindo Caminho gerado pela A* no Espaço de Trabalho
 [![Controlador Federico Seguindo Caminho gerado pela A* no Espaço de Trabalho](https://img.youtube.com/vi/MZlBS-d6O-Y/maxresdefault.jpg)](https://youtu.be/MZlBS-d6O-Y)

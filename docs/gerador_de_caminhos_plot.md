@@ -9,14 +9,14 @@ python tests/plot_path.py
 ### Gráficos dos polinómios cúbicos
 
 #### Caso normal
-![](../assets/normal_case.png)
+![](../assets/images/primeiro_projeto/normal_case.png)
 
 
 ### Quando a posição final e inicial é próxima a 90
-![](../assets/special_case_1.png)
+![](../assets/images/primeiro_projeto/special_case_1.png)
 
 ### Quando somente a posição inicial é próxima a 90
-![](../assets/special_case_2.png)
+![](../assets/images/primeiro_projeto/special_case_2.png)
 
 ### Quando somente a posição final é próxima a 90
-![](../assets/special_case_3.png)
+![](../assets/images/primeiro_projeto/special_case_3.png)

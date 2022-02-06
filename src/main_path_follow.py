@@ -43,7 +43,8 @@ def load_path_from_csv_file(csv_file: Path) -> np.ndarray:
 def main():
     command_line_chooses = {'p_space': 'a_star_potential_field_path', 'c_space': 'a_star__c_space'}
     file_name = command_line_chooses.get(sys.argv[1], command_line_chooses['p_space'])
-    path = load_path_from_csv_file(Path('assets').joinpath(f'{file_name}.csv'))
+    path_csv_file = Path('assets').joinpath('paths').joinpath(f'{file_name}.csv')
+    path = load_path_from_csv_file(path_csv_file)
 
     path_follow = PathFollow(path)
 

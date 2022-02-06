@@ -33,7 +33,7 @@ python -m unittest discover  -v
 
 0. instale as dependências
 
-1. abra o coppeliasim, e abra a simulação que deseja, seja [simple_scene.ttt](scenes/simple_scene.ttt) ou [simple_scene_with_obstacles](scenes/simple_scene_with_obstacles.ttt)
+1. abra o coppeliasim, e abra a simulação que deseja, seja [simple_scene.ttt](scenes/simple_scene.ttt) ou [simple_scene_with_obstacles](scenes/simple_scene_with_obstacles.ttt) ou [simple_scene_with_easy_obstacles.ttt](scenes/simple_scene_with_easy_obstacles.ttt)
    File -> open scene... >
 
 2. inicialize a simulação, clicando no ícone do PLAY
@@ -41,26 +41,31 @@ python -m unittest discover  -v
 3. execute a aplicação em python:
 
 ### testar o controlador braitenberg
+cena: [simple_scene.ttt](scenes/simple_scene.ttt) 
 ```shell
 python src/main_braitenberg.py 
 ```
 
 ###  para testar o controlador de Posição Frederico
+cena: o [simple_scene.ttt](scenes/simple_scene.ttt)
 ```shell
 python src/main_frederico.py
 ```
 
 ### para testar o controlador Frederico com gerador de trajetórias
+cena: [simple_scene.ttt](scenes/simple_scene.ttt)
 ```shell
 python src/main_trajectory_follow.py 
 ```
 
 ### para testar o controlador Frederico com o planejador de caminho a-star + espaço de configuração
+cena: [simple_scene_with_obstacles](scenes/simple_scene_with_obstacles.ttt)
 ```shell
 python src/main_path_follow.py c_space
 ```
 
 ### para testar o controlador Frederico com o planejador de caminho a-star + campo de potencial
+cena: [simple_scene_with_obstacles](scenes/simple_scene_with_obstacles.ttt)
 ```shell
 python src/main_path_follow.py p_space
 ```

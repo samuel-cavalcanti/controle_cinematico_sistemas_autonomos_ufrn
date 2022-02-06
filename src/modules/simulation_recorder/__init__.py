@@ -1,2 +1,2 @@
-from .simulation_recorder import Simulation_recorder
+from .simulation_recorder import SimulationRecorder
 from .simulation_csv_recorder import SimulationCSVRecorder

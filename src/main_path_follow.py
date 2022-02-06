@@ -3,8 +3,11 @@ from pathlib import Path
 import numpy as np
 from modules import utils, coppeliasim, controllers
 from modules.path_and_trajectory_planning.path_follow import PathFollow
-from modules.utils import Position, PID, SimulationCSVRecorder
+from modules.utils import Position, PID
+from modules.simulation_recorder import SimulationRecorder, SimulationCSVRecorder
+
 import sys
+
 
 def draw_path(client_id: int, path: np.ndarray):
 
@@ -38,8 +41,8 @@ def load_path_from_csv_file(csv_file: Path) -> np.ndarray:
 
 
 def main():
-    command_line_chooses= {'p_space':'a_star_potential_field_path','c_space':'a_star__c_space'}
-    file_name = command_line_chooses.get(sys.argv[1],command_line_chooses['p_space']) 
+    command_line_chooses = {'p_space': 'a_star_potential_field_path', 'c_space': 'a_star__c_space'}
+    file_name = command_line_chooses.get(sys.argv[1], command_line_chooses['p_space'])
     path = load_path_from_csv_file(Path('assets').joinpath(f'{file_name}.csv'))
 
     path_follow = PathFollow(path)
@@ -67,7 +70,6 @@ def main():
 
     initial_time = time.time()
     current_time = time.time() - initial_time
-  
 
     simulation_sample_header = ['linear_velocity_x',
                                 'linear_velocity_y',
@@ -81,7 +83,7 @@ def main():
                                 'time_in_seconds'
                                 ]
 
-    simulation_recorder = SimulationCSVRecorder(headers=simulation_sample_header)
+    simulation_recorder: SimulationRecorder = SimulationCSVRecorder(headers=simulation_sample_header)
 
     controller = create_federico_controller()
 
@@ -98,7 +100,6 @@ def main():
 
         if not velocity or not position or not euler_angles_in_rads:
             continue
-        
 
         current_pos = Position(
             x=position[0],

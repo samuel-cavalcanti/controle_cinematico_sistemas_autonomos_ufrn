@@ -4,8 +4,8 @@ from pathlib import Path
 from modules import utils, coppeliasim, controllers
 from modules.path_and_trajectory_planning import TrajectoryFollow
 from modules.path_and_trajectory_planning import path_by_polynomials
-from modules.utils import Position, PID, SimulationCSVRecorder
-
+from modules.utils import Position, PID
+from modules.simulation_recorder import SimulationRecorder, SimulationCSVRecorder
 
 def draw_path(client_id: int, initial_pos: Position, final_pos: Position):
     x_coefficients, y_coefficients = path_by_polynomials.find_coefficients(
@@ -78,7 +78,7 @@ def main():
                                 'time_in_seconds'
                                 ]
 
-    simulation_recorder = SimulationCSVRecorder(headers=simulation_sample_header)
+    simulation_recorder:SimulationRecorder = SimulationCSVRecorder(headers=simulation_sample_header)
 
     controller = create_federico_controller()
 

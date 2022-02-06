@@ -4,7 +4,8 @@ from pathlib import Path
 import numpy as np
 
 from modules import coppeliasim, controllers
-from modules.utils import Position, PID, SimulationCSVRecorder
+from modules.utils import Position, PID
+from modules.simulation_recorder import SimulationRecorder, SimulationCSVRecorder
 
 
 def is_arrival(current: Position, desired: Position) -> bool:
@@ -71,7 +72,7 @@ def main():
                                 'time_in_seconds'
                                 ]
 
-    simulation_recorder = SimulationCSVRecorder(
+    simulation_recorder: SimulationRecorder = SimulationCSVRecorder(
         headers=simulation_sample_header)
 
     while coppeliasim.simulation_is_alive(client_id):

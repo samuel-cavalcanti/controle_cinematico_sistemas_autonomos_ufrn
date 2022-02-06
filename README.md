@@ -47,7 +47,7 @@ python src/main_braitenberg.py
 ```
 
 ###  para testar o controlador de Posição Frederico
-cena: o [simple_scene.ttt](scenes/simple_scene.ttt)
+cena: [simple_scene.ttt](scenes/simple_scene.ttt)
 ```shell
 python src/main_frederico.py
 ```

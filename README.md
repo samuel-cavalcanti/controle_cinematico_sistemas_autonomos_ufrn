@@ -40,22 +40,27 @@ python -m unittest discover  -v
 
 3. execute a aplicação em python:
 
+### testar o controlador braitenberg
 ```shell
-python src/main_braitenberg.py # testar o controlador braitenberg
+python src/main_braitenberg.py 
 ```
 
+###  para testar o controlador de Posição Frederico
 ```shell
-python src/main_frederico.py # para testar o controlador de Posição Frederico
+python src/main_frederico.py
 ```
 
+### para testar o controlador Frederico com gerador de trajetórias
 ```shell
-python src/main_trajectory_follow.py # para testar o controlador Frederico com gerador de trajetórias
+python src/main_trajectory_follow.py 
 ```
 
+### para testar o controlador Frederico com o planejador de caminho a-star + espaço de configuração
 ```shell
-python src/main_path_follow.py c_space # para testar o controlador Frederico com o planejador de caminho a-star + espaço de configuração
+python src/main_path_follow.py c_space
 ```
 
+### para testar o controlador Frederico com o planejador de caminho a-star + campo de potencial
 ```shell
-python src/main_path_follow.py p_space # para testar o controlador Frederico com o planejador de caminho a-star + campo de potencial
+python src/main_path_follow.py p_space
 ```

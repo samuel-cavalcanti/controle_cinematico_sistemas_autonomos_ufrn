@@ -27,3 +27,35 @@ pip install -r requirements.txt
 ```shell
 python -m unittest discover  -v
 ```
+
+
+## Passos para executar a aplicação
+
+0. instale as dependências
+
+1. abra o coppeliasim, e abra a simulação que deseja, seja [simple_scene.ttt](scenes/simple_scene.ttt) ou [simple_scene_with_obstacles](scenes/simple_scene_with_obstacles.ttt)
+   File -> open scene... >
+
+2. inicialize a simulação, clicando no ícone do PLAY
+
+3. execute a aplicação em python:
+
+```shell
+python src/main_braitenberg.py # testar o controlador braitenberg
+```
+
+```shell
+python src/main_frederico.py # para testar o controlador de Posição Frederico
+```
+
+```shell
+python src/main_trajectory_follow.py # para testar o controlador Frederico com gerador de trajetórias
+```
+
+```shell
+python src/main_path_follow.py c_space # para testar o controlador Frederico com o planejador de caminho a-star + espaço de configuração
+```
+
+```shell
+python src/main_path_follow.py p_space # para testar o controlador Frederico com o planejador de caminho a-star + campo de potencial
+```

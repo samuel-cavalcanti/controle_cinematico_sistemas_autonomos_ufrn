@@ -53,27 +53,3 @@ variáveis de entrada e saída em função do tempo, etc.).
 [![Controlador com gerador de trajetórias](https://img.youtube.com/vi/pNImd-6fzWw/maxresdefault.jpg)](https://youtu.be/pNImd-6fzWw)
 
 
-
-## Passos para executar a aplicação
-
-0. instale as dependências
-
-1. abra o coppeliasim, e abra a [simple_scene.ttt](scenes/simple_scene.ttt)  
-   File -> open scene... >
-
-2. inicialize a simulação, clicando no ícone do PLAY
-
-3. execute a aplicação em python:
-
-```shell
-python src/main_braitenberg.py # testar o controlador braitenberg
-```
-
-```shell
-python src/main_frederico.py # para testar o controlador de Posição Frederico
-```
-
-```shell
-python src/main_trajectory_follow.py # para testar o controlador Frederico com gerador de trajetórias
-```
-

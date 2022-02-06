@@ -14,7 +14,7 @@ def main():
 
     pioneer = coppeliasim.get_pioneer_p3dx(client_id)
 
-    header_sensors = [f'distância do sensor {i} em metros' for i in len(proximity_sensors)]
+    header_sensors = [f'distância do sensor {i} em metros' for i in range(len(proximity_sensors))]
 
     header_robot = [
         'posição x do robô em metros',

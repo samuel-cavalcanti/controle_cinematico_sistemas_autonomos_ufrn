@@ -1,5 +1,5 @@
 from .grid_limits import GridLimits
-from ...path_and_trajectory_planning.potential_field.potential_field_calculator import PotentialFieldCalculator
+from ..path_and_trajectory_planning.potential_field.potential_field_calculator import PotentialFieldCalculator
 import numpy as np
 
 

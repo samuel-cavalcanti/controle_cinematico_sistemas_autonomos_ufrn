@@ -1,6 +1,6 @@
 from .a_star_search import Node
 from ..potential_field.potential_field_calculator import PotentialFieldCalculator
-from ...utils.grid import GridLimits
+from ...grid import GridLimits
 from  .mesh_grid_graph import MeshNode
 import numpy as np
 

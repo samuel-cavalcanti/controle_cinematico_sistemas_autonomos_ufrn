@@ -17,7 +17,7 @@ from src.modules.configuration_space import configuration_space
 from src.modules.path_and_trajectory_planning import path_by_polynomials
 from src.modules.utils.polygon import Polygon, Vertex
 from src.modules.utils import Polygon, Position, sorting_vertices_of_convex_polygon
-from src.modules.utils.grid import GridLimits,ConfigurationSpaceGrid
+from src.modules.grid import GridLimits,ConfigurationSpaceGrid
 
 import json
 from pathlib import Path

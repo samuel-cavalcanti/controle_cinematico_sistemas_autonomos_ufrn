@@ -4,8 +4,12 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 
-sys.path.append(os.getcwd())
-from src.modules.utils import Position, deg2rad, rad2deg
+try:
+    from src.modules.utils import Position, deg2rad, rad2deg
+except ModuleNotFoundError:
+    sys.path.append(os.getcwd())
+    from src.modules.utils import Position, deg2rad, rad2deg
+
 
 from src.modules.path_and_trajectory_planning import path_by_polynomials
 

@@ -1,9 +1,6 @@
-from typing import Optional
 from .mesh_node import MeshNode
 from ..a_star_search import Node
-from ....utils.grid import Grid
-
-
+from ....grid import Grid
 import numpy as np
 
 
@@ -34,15 +31,3 @@ class MeshGridGraph:
                 neighbors.append(MeshNode(x_index=index[0], y_index=index[1]))
 
         return neighbors
-
-    def __is_valid_index(self, index: tuple[int, int], i: int, j: int) -> bool:
-
-        if index[0] < 0 or index[1] < 0:
-            return False
-        try:
-            self.__grid.get(x=index[0], y=index[1])
-            if self.__grid.is_valid_index(index[0], index[1]):
-                return True
-
-        except IndexError:
-            return False

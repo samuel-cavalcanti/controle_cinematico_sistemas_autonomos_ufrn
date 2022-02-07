@@ -1,5 +1,5 @@
 from ....utils.polygon import Polygon
-from ....utils.grid.grid_limits import GridLimits
+from ....grid.grid_limits import GridLimits
 
 from ..a_star_search import Graph
 from .mesh_grid_graph import MeshGridGraph

@@ -2,7 +2,7 @@ from typing import Optional
 from .mesh_grid_graph import MeshNode
 from .a_star_search import Node
 
-from ...utils.grid import Grid
+from ...grid import Grid
 import numpy as np
 
 

@@ -92,7 +92,7 @@ def read_sensors(client_id: int, sensors: list[int]) -> Optional[list[float]]:
             client_id, sensor, sim.simx_opmode_streaming)
 
         if return_code == sim.simx_return_ok:
-            distance = 1.0 if not detection_state else values[2]
+            distance = float('inf') if not detection_state else values[2]
             distances.append(distance)
         else:
             return None

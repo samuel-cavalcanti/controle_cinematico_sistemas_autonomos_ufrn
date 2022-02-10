@@ -8,8 +8,6 @@ from ..robot_state import RobotState
 from .ultrasonic_internal_parameters import UltrasonicInternalParameters
 
 
-
-
 GridCenter = tuple[float, float]
 
 
@@ -23,6 +21,12 @@ class UltrasonicInverseModel:
         self.__internal_parameters = parameters
 
     def inverse_model(self, robot_state: RobotState, grid_center: GridCenter) -> Space:
+        """
+            O calculo do modelo recebe como parâmetro o estado do robô que é sua Posição x,y e orientação theta
+            mais a célula da grade de ocupação que é uma tupla  das posições x,y em metros do centro da célula
+            de ocupação. Ela retorna se essa célula é uma provavalmente célula livre, ocupada ou se está fora de alcance.
+
+         """
 
         sensor_position = self.__get_current_sensor_position(robot_state.robot_position)
 

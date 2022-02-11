@@ -7,10 +7,10 @@ from pathlib import Path
 
 
 try:
-    from src.modules.utils.grid.grid_limits import GridLimits
+    from src.modules.grid.grid_limits import GridLimits
 except ModuleNotFoundError:
     sys.path.append(os.getcwd())
-    from src.modules.utils.grid.grid_limits import GridLimits
+    from src.modules.grid.grid_limits import GridLimits
 
 from dataclasses import dataclass
 from src.modules.utils.plotter_2d import RGB, Plotter2D
@@ -20,7 +20,7 @@ from src.modules.path_and_trajectory_planning.graph_algorithms.potential_field_a
 from src.modules.path_and_trajectory_planning.graph_algorithms.mesh_grid_graph import MeshGridGraph, MeshNode
 from src.modules.path_and_trajectory_planning.graph_algorithms.a_star_search import AStarSearch
 from src.modules.configuration_space import configuration_space
-from src.modules.utils.grid import PotentialFielGrid
+from src.modules.grid import PotentialFielGrid
 from src.modules.utils.polygon import Polygon, Vertex
 
 

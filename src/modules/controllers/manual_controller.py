@@ -1,52 +1,21 @@
 from typing import Optional
 from modules.robots_kinematics.pioneer import PioneerWheelVelocity
-import sys
 
+import keyboard
 
-class ManualControllerException(Exception):
-    pass
 
 
 def manual_controller() -> Optional[PioneerWheelVelocity]:
-
-    if sys.platform == "win32":
-        return manual_controller_windows()
-    elif sys.platform.startswith('linux'):
-        raise ManualControllerException(f'Operational system not supported {sys.platform}')
-    else:
-        raise ManualControllerException(f'Operational system not supported {sys.platform}')
-
-
-def manual_controller_windows() -> Optional[PioneerWheelVelocity]:
-    import msvcrt
-
-    if not msvcrt.kbhit():
-        return None
-
-    letra:bytes = msvcrt.getch()
-
-    print("Você apertou a tecla", letra)
-    return move(letra.decode())
-
-
-def move(char: str) -> Optional[PioneerWheelVelocity]:
-    if char == 'w':
+    max_speed = 2.0
+    if keyboard.is_pressed('w'):
         print("w")
-        return PioneerWheelVelocity(right=1.0, left=1.0)
-    elif char == 's':
+        return PioneerWheelVelocity(right=max_speed, left=max_speed)
+    elif keyboard.is_pressed('s'):
         print("s")
-        return PioneerWheelVelocity(right=-1.0, left=-1.0)
-    elif char == 'a':
+        return PioneerWheelVelocity(right=-max_speed, left=-max_speed)
+    elif keyboard.is_pressed('a'):
         print("a")
-        return PioneerWheelVelocity(right=1.0, left=0.5)
-    elif char == 'd':
+        return PioneerWheelVelocity(right=max_speed, left=0.5*max_speed)
+    elif keyboard.is_pressed('d'):
         print("d")
-        return PioneerWheelVelocity(right=0.5, left=1.0)
-
-
-
-def manual_controller_linux() -> Optional[PioneerWheelVelocity]:
-    
-    return None
-
-
+        return PioneerWheelVelocity(right=0.5*max_speed, left=max_speed)

@@ -1,7 +1,9 @@
+from dataclasses import dataclass
+
 from ..utils import Position
 
-from dataclasses import dataclass
+
 @dataclass
 class RobotState:
-    robot_position: Position
-    normalized_distance: float
+    robot_pos: Position
+    normalized_distances: list[float]

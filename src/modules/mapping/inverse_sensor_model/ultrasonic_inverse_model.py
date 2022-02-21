@@ -3,7 +3,7 @@
 from ...utils import Position
 import numpy as np
 from .space import Space
-from ..robot_state import RobotState
+from .sensor_state import SensorState
 
 from .ultrasonic_internal_parameters import UltrasonicInternalParameters
 
@@ -20,19 +20,19 @@ class UltrasonicInverseModel:
         self.__position_relative_to_robot = ultrasonic_position
         self.__internal_parameters = parameters
 
-    def inverse_model(self, robot_state: RobotState, grid_center: GridCenter) -> Space:
+    def inverse_model(self, sensor_state: SensorState, grid_center: GridCenter) -> Space:
         """
-            O calculo do modelo recebe como parâmetro o estado do robô que é sua Posição x,y e orientação theta
-            mais a célula da grade de ocupação que é uma tupla  das posições x,y em metros do centro da célula
+            O calculo do modelo recebe como parâmetro o estado do sensor que é a Posição x,y e orientação theta
+            do robô  e a distância lida pelo sensor mais a célula da grade de ocupação que é uma tupla  das posições x,y em metros do centro da célula
             de ocupação. Ela retorna se essa célula é uma provavalmente célula livre, ocupada ou se está fora de alcance.
 
          """
 
-        sensor_position = self.__get_current_sensor_position(robot_state.robot_position)
+        sensor_position = self.__get_current_sensor_position(sensor_state.robot_position)
 
         r, phi = self.__translate_to_sensor_and_covert_to_polar_system(sensor_position, grid_center)
 
-        distance_in_meters = robot_state.normalized_distance*self.__internal_parameters.max_distance_in_meters
+        distance_in_meters = sensor_state.normalized_distance*self.__internal_parameters.max_distance_in_meters
 
         is_angle_in_range = np.abs(phi) < self.__internal_parameters.alpha_in_rads/2.0
 

@@ -1,7 +1,7 @@
 import unittest
 
 from src.modules.mapping.inverse_sensor_model import UltrasonicInverseModel, UltrasonicInternalParameters, Space
-from src.modules.mapping.robot_state import RobotState
+from src.modules.mapping.inverse_sensor_model.sensor_state import SensorState
 from src.modules.utils.position import Position
 import numpy as np
 
@@ -30,13 +30,13 @@ class UltrasonicInverseModelTestCase(unittest.TestCase):
         sensor_model = UltrasonicInverseModel(sensor_pos, sensor_parameters)
 
         states = [
-            RobotState(robot_position=Position(0, 0, 0), normalized_distance=1.0),  # 0
-            RobotState(robot_position=Position(0.5, 0.5, 0), normalized_distance=1.0),  # 1
-            RobotState(robot_position=Position(1.0, 1.0, 0), normalized_distance=1.0),  # 2
-            RobotState(robot_position=Position(1.0, 1.0, np.deg2rad(20)), normalized_distance=1.0),  # 3
-            RobotState(robot_position=Position(1.0, 1.0, np.deg2rad(40)), normalized_distance=1.0),  # 4
-            RobotState(robot_position=Position(1.0, 1.0, np.deg2rad(40)), normalized_distance=0.5),  # 5
-            RobotState(robot_position=Position(1.3, 1.3, np.deg2rad(40)), normalized_distance=0.5),  # 5
+            SensorState(robot_position=Position(0, 0, 0), normalized_distance=1.0),  # 0
+            SensorState(robot_position=Position(0.5, 0.5, 0), normalized_distance=1.0),  # 1
+            SensorState(robot_position=Position(1.0, 1.0, 0), normalized_distance=1.0),  # 2
+            SensorState(robot_position=Position(1.0, 1.0, np.deg2rad(20)), normalized_distance=1.0),  # 3
+            SensorState(robot_position=Position(1.0, 1.0, np.deg2rad(40)), normalized_distance=1.0),  # 4
+            SensorState(robot_position=Position(1.0, 1.0, np.deg2rad(40)), normalized_distance=0.5),  # 5
+            SensorState(robot_position=Position(1.3, 1.3, np.deg2rad(40)), normalized_distance=0.5),  # 5
         ]
 
         expected_spaces = [
@@ -49,6 +49,6 @@ class UltrasonicInverseModelTestCase(unittest.TestCase):
         ]
 
         for state, space in zip(states, expected_spaces):
-            result_space = sensor_model.inverse_model(robot_state=state, grid_center=(1.5, 1.5))
-            self.assertEquals(result_space, space,
+            result_space = sensor_model.inverse_model(sensor_state=state, grid_center=(1.5, 1.5))
+            self.assertEqual(result_space, space,
                               msg=f'expected: {space} result {result_space}')

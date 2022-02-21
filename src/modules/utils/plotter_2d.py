@@ -101,3 +101,6 @@ class Plotter2D:
         """Espera-se uma imagem em r,g,b ou em tom de cinza,
         """
         pyplot.pcolor(field,vmax=5,vmin=0)
+    
+    def draw_image(self,image:np.ndarray):
+        pyplot.imshow(image)

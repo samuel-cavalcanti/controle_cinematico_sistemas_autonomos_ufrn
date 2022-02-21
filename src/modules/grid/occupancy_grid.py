@@ -30,6 +30,13 @@ class OccupancyGrid:
         else:
             raise IndexError
 
+    def get_probability_matrix(self) -> np.ndarray:
+        """
+            retorna uma matriz de probabilides, essa função é utilizada para criar gráficos
+            de modo que seja possível visualizar a grade de ocupação, no caso a matriz se assemelha
+            a uma imagem em ton de cinza.
+        """
+        return 1 - 1/(1 + np.exp(self.__grid))
 
     def is_valid_index(self, x: int, y: int) -> bool:
 

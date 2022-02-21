@@ -38,15 +38,17 @@ class UltrasonicInverseModel:
 
         is_ray_in_range = self.__internal_parameters.min_distance_in_meters < r < self.__internal_parameters.max_distance_in_meters
 
-        is_in_free_space = r <= distance_in_meters
+        is_in_free_space = r <= (distance_in_meters - (self.__internal_parameters.e_in_meters)/2)
+
+        is_in_undefined_space = r >= (distance_in_meters + (self.__internal_parameters.e_in_meters)/2)
 
         if is_angle_in_range and is_ray_in_range:
-
+            if is_in_undefined_space:
+                return Space.out_of_range                   
             if is_in_free_space:
                 return Space.free
             else:
                 return Space.occupied
-
         else:
             return Space.out_of_range
 

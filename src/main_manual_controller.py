@@ -3,8 +3,8 @@ from modules import coppeliasim, controllers
 from modules.simulation_recorder.simulation_csv_recorder import SimulationCSVRecorder
 from modules.simulation_recorder.simulation_recorder import SimulationRecorder
 import os
-import keyboard
-import msvcrt
+
+
 
 
 def main():
@@ -40,11 +40,9 @@ def main():
             euler_angles_in_rads[2],
         ]
         recorder.add_sample(sample=robot_sample + distances)
+        pioneer_velocity = controllers.manual_controller()
 
-        if msvcrt.kbhit():
-            k = msvcrt.getch()
-            print ("Você apertou a tecla", k)
-            pioneer_velocity = controllers.manual_controller(k)
+        if pioneer_velocity:
             coppeliasim.set_motor_velocity(client_id, left_motor, pioneer_velocity.left)
             coppeliasim.set_motor_velocity(client_id, right_motor, pioneer_velocity.right)
 

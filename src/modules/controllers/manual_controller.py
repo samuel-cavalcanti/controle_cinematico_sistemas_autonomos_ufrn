@@ -1,9 +1,30 @@
+from tkinter import N
+from typing import Optional
 from modules.robots_kinematics.pioneer import PioneerWheelVelocity
-import keyboard
+import sys
 
-def manual_controller(letra: bytes) -> PioneerWheelVelocity: 
+
+
+def manual_controller() -> Optional[PioneerWheelVelocity]:
+
+    if sys.platform == "win32":
+        return manual_controller_windows()
+    elif sys.platform.startswith('linux'):
+        return manual_controller_linux()
+
+
+def manual_controller_windows() -> Optional[PioneerWheelVelocity]:
+    import msvcrt
+
+    if not msvcrt.kbhit():
+        return None
+
+    letra = msvcrt.getch()
+
+    print("Você apertou a tecla", letra)
+
     if letra == b'w':
-        print ("w")
+        print("w")
         return PioneerWheelVelocity(right=1.0, left=1.0)
     elif letra == b's':
         print("s")
@@ -14,3 +35,10 @@ def manual_controller(letra: bytes) -> PioneerWheelVelocity:
     elif letra == b'd':
         print("d")
         return PioneerWheelVelocity(right=0.5, left=1.0)
+
+    return None
+
+
+def manual_controller_linux() -> Optional[PioneerWheelVelocity]:
+
+    return None

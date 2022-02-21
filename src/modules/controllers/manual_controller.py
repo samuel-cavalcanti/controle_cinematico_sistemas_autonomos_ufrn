@@ -1,4 +1,3 @@
-from tkinter import N
 from typing import Optional
 from modules.robots_kinematics.pioneer import PioneerWheelVelocity
 import sys

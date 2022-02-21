@@ -12,7 +12,7 @@ def manual_controller() -> Optional[PioneerWheelVelocity]:
     if sys.platform == "win32":
         return manual_controller_windows()
     elif sys.platform.startswith('linux'):
-        return manual_controller_linux()
+        raise ManualControllerException(f'Operational system not supported {sys.platform}')
     else:
         raise ManualControllerException(f'Operational system not supported {sys.platform}')
 
@@ -23,26 +23,30 @@ def manual_controller_windows() -> Optional[PioneerWheelVelocity]:
     if not msvcrt.kbhit():
         return None
 
-    letra = msvcrt.getch()
+    letra:bytes = msvcrt.getch()
 
     print("Você apertou a tecla", letra)
+    return move(letra.decode())
 
-    if letra == b'w':
+
+def move(char: str) -> Optional[PioneerWheelVelocity]:
+    if char == 'w':
         print("w")
         return PioneerWheelVelocity(right=1.0, left=1.0)
-    elif letra == b's':
+    elif char == 's':
         print("s")
         return PioneerWheelVelocity(right=-1.0, left=-1.0)
-    elif letra == b'a':
+    elif char == 'a':
         print("a")
         return PioneerWheelVelocity(right=1.0, left=0.5)
-    elif letra == b'd':
+    elif char == 'd':
         print("d")
         return PioneerWheelVelocity(right=0.5, left=1.0)
 
-    return None
 
 
 def manual_controller_linux() -> Optional[PioneerWheelVelocity]:
-
+    
     return None
+
+

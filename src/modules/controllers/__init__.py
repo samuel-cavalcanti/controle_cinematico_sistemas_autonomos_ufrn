@@ -1,2 +1,3 @@
 from .braitenberg_controller import braitenberg_controller
 from .frederico_controller import FredericoController
+from .manual_controller import manual_controller

@@ -4,6 +4,9 @@ from modules.robots_kinematics.pioneer import PioneerWheelVelocity
 import sys
 
 
+class ManualControllerException(Exception):
+    pass
+
 
 def manual_controller() -> Optional[PioneerWheelVelocity]:
 
@@ -11,6 +14,8 @@ def manual_controller() -> Optional[PioneerWheelVelocity]:
         return manual_controller_windows()
     elif sys.platform.startswith('linux'):
         return manual_controller_linux()
+    else:
+        raise ManualControllerException(f'Operational system not supported {sys.platform}')
 
 
 def manual_controller_windows() -> Optional[PioneerWheelVelocity]:

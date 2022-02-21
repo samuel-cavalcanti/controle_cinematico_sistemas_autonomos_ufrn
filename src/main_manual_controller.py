@@ -2,6 +2,7 @@ from pathlib import Path
 from modules import coppeliasim, controllers
 from modules.simulation_recorder.simulation_csv_recorder import SimulationCSVRecorder
 from modules.simulation_recorder.simulation_recorder import SimulationRecorder
+from modules.robots_kinematics.pioneer import PioneerWheelVelocity
 import os
 
 

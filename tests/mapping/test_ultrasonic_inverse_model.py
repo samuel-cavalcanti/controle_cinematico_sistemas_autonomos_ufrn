@@ -13,7 +13,7 @@ class UltrasonicInverseModelTestCase(unittest.TestCase):
         sensor_pos = Position(x=0, y=0, theta_in_rads=0)
         sensor_parameters = UltrasonicInternalParameters(
             alpha_in_rads=np.deg2rad(30),
-            e_in_meters=0,
+            e_in_meters=0.01,
             max_distance_in_meters=1,
             min_distance_in_meters=0.05)
 
@@ -23,7 +23,7 @@ class UltrasonicInverseModelTestCase(unittest.TestCase):
               \     /     | valores menores que 0.05 metros não são detectáveis
                \   /      |      
                 \ /       |
-                 .        |        
+                 . (robô) |        
 
         """
 
@@ -45,7 +45,7 @@ class UltrasonicInverseModelTestCase(unittest.TestCase):
             Space.out_of_range,  # 2
             Space.out_of_range,  # 3
             Space.free,  # 4
-            Space.occupied  # 5
+            Space.out_of_range  # 5
         ]
 
         for state, space in zip(states, expected_spaces):

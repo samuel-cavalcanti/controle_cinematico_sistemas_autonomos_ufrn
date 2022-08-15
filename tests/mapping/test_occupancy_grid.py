@@ -13,11 +13,11 @@ class OccupancyGridTestCase(unittest.TestCase):
 
         value = grid.get(0, 0)
 
-        self.assertEquals(value, 0, msg="Todas as células devem começar com log-odd igual a 0")
+        self.assertEqual(value, 0, msg="Todas as células devem começar com log-odd igual a 0")
 
         grid.set_log_odd(8, 8, 10)
 
-        self.assertEquals(grid.get(8, 8), 10, msg="deve-se ser capaz de atualizar o grid")
+        self.assertEqual(grid.get(8, 8), 10, msg="deve-se ser capaz de atualizar o grid")
 
         grid_width_x = int(round((limits.x_max - limits.x_min) / limits.resolution))
         grid_width_y = int(round((limits.y_max - limits.y_min) / limits.resolution))

@@ -19,7 +19,7 @@ def create_federico_controller() -> controllers.FredericoController:
     k_p = 0.9145
     k_i = k_p / 1.9079
     k_d = k_p * 0.085
-    """Constantes Kp Ki Kd adiquiridas experimentalmente """
+    """Constantes Kp Ki Kd adquiridas experimentalmente """
     pid_position = PID(k_p, k_i, k_d, set_point=0)
     k_p = 0.4
     k_i = 0.15

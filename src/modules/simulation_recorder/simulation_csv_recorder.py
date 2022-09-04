@@ -31,6 +31,8 @@ class SimulationCSVRecorder:
 
     def save(self, file_path: Path):
 
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+
         with open(file_path, mode='w') as file:
 
             writer = csv.writer(file)

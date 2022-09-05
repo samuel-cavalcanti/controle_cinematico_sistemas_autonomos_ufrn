@@ -75,7 +75,7 @@ class RemoteAPIClient:
         ret = type(name, (), {})
         if not _info:
             _info = self.call('zmqRemoteApi.info', [name])
-        for k, v in _info.items():
+        for k, v in _info.items():  # type: ignore
             if not isinstance(v, dict):
                 raise ValueError('found nondict')
             if len(v) == 1 and 'func' in v:

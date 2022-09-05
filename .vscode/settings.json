@@ -12,4 +12,12 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
+    "cSpell.words": [
+        "braitenberg",
+        "coppeliasim",
+        "federico",
+        "frederico",
+        "opmode",
+        "simx"
+    ],
 }

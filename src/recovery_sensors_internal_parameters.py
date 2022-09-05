@@ -17,7 +17,7 @@ import json
 
 def main():
 
-    print('tentando se connectar ao simulador')
+    print('tentando se conectar ao simulador')
     client_id = coppeliasim.try_to_connect_to_coppeliasim(port=19997)
 
     proximity_sensors = coppeliasim.get_sensors(client_id)

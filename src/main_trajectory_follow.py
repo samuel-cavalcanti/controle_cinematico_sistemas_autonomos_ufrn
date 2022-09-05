@@ -51,7 +51,7 @@ def main():
                 y:  0.050001 metros
                 z:  0.13879 metros
 
-           orientação inicial do robô angulos de euler:
+           orientação inicial do robô ângulos de euler:
                alpha = 0 radiano
                beta = 0 radiano
                gamma = 0 radiano

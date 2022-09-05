@@ -54,7 +54,7 @@ def create_obstacle(obstacle_name: str, total_vertices: int, client_id: int) -> 
 
 
 def create_vertex(vertex_name: str, client_id: int) -> Vertex:
-    print(f'tentando buscar vertice: {vertex_name}')
+    print(f'tentando buscar vértice: {vertex_name}')
     vertex_id = coppeliasim.get_object(client_id, vertex_name)
     position = coppeliasim.get_object_position(client_id, vertex_id)
     while position is None:

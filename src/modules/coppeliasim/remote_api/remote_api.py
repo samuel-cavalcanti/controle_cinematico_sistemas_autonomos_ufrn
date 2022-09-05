@@ -109,8 +109,8 @@ def get_object_velocity(client_id: int, object_id: int) -> Optional[tuple[list[f
     """
         Retorna a velocidade linear e angular do objeto, respectivamente.
         onde a velocidade linear é composta pelas componentes x,y,z, posição 0,1,2 da lista
-        e velocidade angular são as variações dos angulos de euler yaw , pitch, roll, no tempo.
-        Velocidade linear está em metros por segundo, angulos de euler em rads por segundo 
+        e velocidade angular são as variações dos ângulos de euler yaw , pitch, roll, no tempo.
+        Velocidade linear está em metros por segundo, ângulos de euler em rads por segundo 
     """
     return_code, linear_velocity, angular_velocity = sim.simxGetObjectVelocity(
         client_id, object_id, sim.simx_opmode_streaming)
@@ -134,7 +134,7 @@ def get_object_position(client_id: int, object_id: int) -> Optional[list[float]]
 
 
 def get_object_orientation(client_id: int, object_id: int) -> Optional[list[float]]:
-    '''Retorna os angulos de euler: yaw , pitch, roll referente ao referencial global'''
+    '''Retorna os ângulos de euler: yaw , pitch, roll referente ao referencial global'''
 
     return_code, orientation = sim.simxGetObjectOrientation(
         client_id, object_id, -1, sim.simx_opmode_streaming)

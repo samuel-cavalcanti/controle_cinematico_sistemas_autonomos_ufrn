@@ -1,9 +1,11 @@
+# type: ignore
 import platform
 import struct
 import sys
 import os
 import ctypes as ct
 from .simConst import *
+
 
 #load library
 libsimx = None

@@ -1,5 +1,7 @@
 from pathlib import Path
-from modules import coppeliasim, controllers
+from modules import controllers
+from modules.coppeliasim import remote_api as coppeliasim
+
 from modules.simulation_recorder.simulation_csv_recorder import SimulationCSVRecorder
 from modules.simulation_recorder.simulation_recorder import SimulationRecorder
 from modules.robots_kinematics.pioneer import PioneerWheelVelocity

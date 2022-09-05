@@ -1,1 +1,1 @@
-from .coppeliasim import *
+from .remote_api import remote_api

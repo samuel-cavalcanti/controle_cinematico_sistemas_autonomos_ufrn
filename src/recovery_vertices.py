@@ -3,7 +3,9 @@ import json
 import os
 from pathlib import Path
 
-from modules.coppeliasim import coppeliasim
+
+from modules.coppeliasim import remote_api as coppeliasim
+
 from modules.utils import Polygon, Vertex
 
 NUMBER_OF_ROBOT_VERTICES = 4

@@ -1,7 +1,9 @@
 import time
 from pathlib import Path
 
-from modules import utils, coppeliasim, controllers
+from modules import controllers
+from modules.coppeliasim import remote_api as coppeliasim
+from modules import utils
 from modules.path_and_trajectory_planning import TrajectoryFollow
 from modules.path_and_trajectory_planning import path_by_polynomials
 from modules.utils import Position, PID

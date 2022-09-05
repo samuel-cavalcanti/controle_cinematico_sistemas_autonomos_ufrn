@@ -3,10 +3,11 @@ from pathlib import Path
 
 import numpy as np
 
-from modules import coppeliasim, controllers
+from modules import controllers
+from modules.coppeliasim import remote_api as coppeliasim
+
 from modules.utils import Position, PID
 from modules.simulation_recorder import SimulationRecorder, SimulationCSVRecorder
-
 
 def is_arrival(current: Position, desired: Position) -> bool:
     precision_in_meters = 0.05

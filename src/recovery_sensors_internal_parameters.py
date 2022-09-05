@@ -6,7 +6,8 @@
 """
 
 from pathlib import Path
-from modules.coppeliasim import coppeliasim
+from modules.coppeliasim import remote_api as coppeliasim
+
 from modules.utils import Position
 from modules.mapping.inverse_sensor_model import UltrasonicInternalParameters
 import numpy as np
@@ -27,12 +28,16 @@ def main():
     print('conectado ao simulador')
     print('Extraindo valores de posição e orientação dos sensores do simulador')
 
-    simulation_positions = [coppeliasim.get_object_position(client_id, sensor) for sensor in proximity_sensors]
-    simulation_orientations = [coppeliasim.get_object_orientation(client_id, sensor) for sensor in proximity_sensors]
-
-    while None in simulation_positions or None in simulation_orientations:
+    def get_position_and_orientation() -> tuple[list[list[float]], list[list[float]]]:
         simulation_positions = [coppeliasim.get_object_position(client_id, sensor) for sensor in proximity_sensors]
         simulation_orientations = [coppeliasim.get_object_orientation(client_id, sensor) for sensor in proximity_sensors]
+        while None in simulation_positions or None in simulation_orientations:
+            simulation_positions = [coppeliasim.get_object_position(client_id, sensor) for sensor in proximity_sensors]
+            simulation_orientations = [coppeliasim.get_object_orientation(client_id, sensor) for sensor in proximity_sensors]
+   
+        return simulation_positions, simulation_orientations  # type: ignore
+
+    simulation_positions, simulation_orientations = get_position_and_orientation()    
 
     def map_to_position(simulation_position: list[float], euler_angles_in_rads: list[float]) -> Position:
         """No caso do sensores o angulo theta é o angulo beta do simulador"""

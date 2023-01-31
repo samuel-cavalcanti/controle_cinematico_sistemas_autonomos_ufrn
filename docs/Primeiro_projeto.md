@@ -42,6 +42,7 @@ variáveis de entrada e saída em função do tempo, etc.).
 
 ## Demonstração do gerador de caminhos no CoppeliaSim
 [![gerador de caminhos](https://img.youtube.com/vi/eXVkFRJU0hI/maxresdefault.jpg)](https://youtu.be/eXVkFRJU0hI)
+![](https://youtu.be/eXVkFRJU0hI)
 
 
 ## Demonstração do Controlador de Posição Frederico

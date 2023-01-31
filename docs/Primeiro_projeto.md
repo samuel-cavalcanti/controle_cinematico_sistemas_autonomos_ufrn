@@ -41,15 +41,18 @@ variáveis de entrada e saída em função do tempo, etc.).
 
 
 ## Demonstração do gerador de caminhos no CoppeliaSim
-![](https://youtu.be/eXVkFRJU0hI)
+
+https://user-images.githubusercontent.com/24573157/215786342-17f21b71-4963-459c-9ca3-1bc2c2f729c4.mp4
 
 
 ## Demonstração do Controlador de Posição Frederico
-[![Controlador de Posição Frederico](https://img.youtube.com/vi/OEe0XtFPN4g/maxresdefault.jpg)](https://youtu.be/OEe0XtFPN4g)
+
+https://user-images.githubusercontent.com/24573157/215786734-f65424ca-ff4e-499a-bf9e-f69b5b9790e9.mp4
+
 
 
 
 ## Demonstração do Controlador Frederico com gerador de trajetórias
-[![Controlador com gerador de trajetórias](https://img.youtube.com/vi/pNImd-6fzWw/maxresdefault.jpg)](https://youtu.be/pNImd-6fzWw)
 
+https://user-images.githubusercontent.com/24573157/215786910-4351b198-f914-4ce7-a821-04ab5f5a66ff.mp4
 
